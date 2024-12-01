@@ -1,0 +1,193 @@
+<mjml>
+    <mj-head>
+        <mj-title>{{blogTitle}}</mj-title>
+
+        <mj-attributes>
+        <mj-all padding="0px"></mj-all>
+        <mj-text font-family="Ubuntu, Helvetica, Arial, sans-serif" padding="0 25px" font-size="13px"></mj-text>
+        <mj-section background-color="#ffffff"></mj-section>
+        <mj-class name="preheader" color="#000000" font-size="11px"></mj-class>
+        </mj-attributes>
+
+        <mj-style inline="inline">
+            a { text-decoration: none; color: inherit; }
+        </mj-style>
+
+        <mj-style inline="inline">
+            .link-style-blue { color: #2585b2 !important;  text-decoration: underline !important; }
+        </mj-style>
+        
+        <mj-style inline="inline">
+            .manage-sub-link{
+                color:#ffffff !important;
+                border-radius:10em;
+                border:1px solid #11729e;
+                text-decoration:none;
+                background-color:#2585b2;
+                padding:9px 15px;
+                font-size:16px;
+                line-height:1.4em;
+                font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+                font-weight:"normal";
+            }
+        </mj-style>
+        
+        <mj-style inline="inline">
+            a.manage-sub-unsub-sub-link {
+                color:#2585b2 !important;text-decoration:underline !important;
+                font-size:14px !important;
+                margin-left:16px;
+            }
+        </mj-style>
+    </mj-head>
+
+
+
+    <mj-body background-color="#dddddd" width="600px">
+
+        <mj-spacer height="20px" />
+
+        <mj-section padding="8px 0 0 0" background-color="#a747b0">
+            <mj-column width="100%">
+            </mj-column>
+        </mj-section>
+
+
+        <mj-section padding="8px 14px 8px 14px" background-color="#efefef" border-bottom="1px solid #ddd">
+            <mj-group>
+                <mj-column vertical-align="middle" width="77%">
+                    <mj-text align="left" font-size="16px" color="#464646">
+                        New post on <strong><a href="{{blogUrl}}">{{blogTitle}}</a></strong> | <strong>{{authorDisplayName}}!</strong>
+                    </mj-text>
+                </mj-column>
+                <mj-column vertical-align="middle" width="23%">
+                    <mj-image align="right" src="{{blogLogoUrl}}" href="{{blogUrl}}" alt="" width="50px" border="none"></mj-image>
+                </mj-column>
+            </mj-group>
+        </mj-section>
+
+
+        <mj-wrapper padding="16px" background-color="#fff">
+            <mj-section padding="10px 0px">
+                <mj-group>
+                    <mj-column vertical-align="middle" width="18%">
+                        <mj-image align="left" src="{{authorPicUrl}}" href="{{blogUrl}}" alt="" width="90px" border="none"></mj-image>
+                    </mj-column>
+                    <mj-column vertical-align="middle" width="81%">
+                        <mj-text align="left" font-size="26px" color="#2586b2">
+                            <strong><a href="{{postUrl}}">{{postTitle}}</a></strong>
+                        </mj-text>
+                        
+                        <mj-text align="left" font-size="16px" color="#898a8a" padding-top="3px">
+                            by <a href="{{authorUrl}}">{{authorDisplayName}}</a>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+
+
+            <mj-section>
+                <mj-column>
+                    <mj-spacer height="10px" />
+                    
+                    <mj-text align="justify" font-size="16px" color="#444444" padding="0">
+                        {{&postIntro}}
+                    </mj-text>
+                    <mj-text align="left" font-size="18px" font-family="Arial" padding="20px 0 20px 0"  color="#2586b2" text-decoration="underline">
+                        <a href="{{postUrl}}">Read more of this post</a>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section border-top="1px solid #ccc" border-bottom="1px solid #ccc" padding="14px 0 14px 0">
+                <mj-column>
+                    <mj-text align="left" font-size="12px" color="#898a8a" padding="3px 0 0 0" line-height="20px">
+                        <strong><a class="link-style-blue" href="{{authorUrl}}">{{authorDisplayName}}</a></strong>
+                        | {{postDate}} at {{postTime}}
+
+                        {{#postTagsHtml}}| Tags: {{&postTagsHtml}} {{/postTagsHtml}}
+
+                        {{#postCategoriesHtml}}| Categories: {{&postCategoriesHtml}} {{/postCategoriesHtml}}
+
+                        | URL: <a class="link-style-blue" href="{{blogUrl}}">{{blogUrl}}</a>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding="24px 0 16px 0">
+
+
+
+
+
+                <!--Using 100% mj-raw-->
+                
+                <mj-raw>
+                    <table style="width:100%;font-size:14px;padding:0;width:auto;cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td nowrap="">
+                                    <a class="manage-sub-link" style="color:#ffffff !important;border-radius:10em;border:1px solid #11729e;text-decoration:none;background-color:#2585b2;padding:9px 15px;font-size:16px;line-height:1.4em;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-weight:normal;" href="{{postReplyLink}}">
+                                        Comment
+                                    </a>
+                                </td>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a style="margin-left:16px;color:#2585b2 !important;font-size:14px !important;text-decoration:underline !important;" class="manage-sub-unsub-sub-link" href="{{postCommentsLink}}">
+                                        See all comments
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mj-raw>
+                
+
+
+            </mj-section>
+
+        </mj-wrapper>
+
+
+
+
+
+        <mj-section padding="20px 0px 20px 0px" background-color="#efefef" border-top="1px solid #ddd">
+            <mj-column vertical-align="middle">
+                
+                <mj-text align="left" font-size="14px" color="#444444">
+                    <a class="link-style-blue" href="{{unsubUrl}}">Unsubscribe</a> to no longer receive posts from {{blogTitle}} | {{authorDisplayName}}.
+                </mj-text>
+                
+                <mj-text align="left" font-size="14px" color="#444444" padding-top="8px">
+                    Change your email settings at <strong><a href="{{pcUrl}}" class="link-style-blue">Preference Center</a></strong>.
+                </mj-text>
+                
+                <mj-spacer height="20px" />
+
+                <mj-text align="left" font-size="14px" color="#444444">
+                    <strong>Trouble clicking?</strong> Copy and paste this url in your browser:
+                </mj-text>
+                
+                <mj-text align="left" font-size="14px" color="#444444" padding-top="8px">
+                    <a href="{{postUrl}}">{{postUrl}}</a>
+                </mj-text>
+
+
+            </mj-column>
+        </mj-section>
+
+
+
+        
+
+        <mj-section padding="8px 0 0 0" background-color="#a747b0">
+            <mj-column width="100%">
+            </mj-column>
+        </mj-section>
+    
+
+        <mj-spacer height="20px" />
+
+    </mj-body>
+</mjml>

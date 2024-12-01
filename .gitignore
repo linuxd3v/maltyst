@@ -1,0 +1,4 @@
+vendor
+frontend/node_modules
+plugin-dist
+static/dist-*
