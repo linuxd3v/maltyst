@@ -1,0 +1,76 @@
+
+.maltyst_result_msg{
+  padding-bottom:10px;
+  padding-top:10px;
+  margin-bottom: 16px;
+
+
+  &.success{
+    color:green;
+    border-bottom: 1px dashed green;
+    border-top: 1px dashed green;
+  }
+
+  &.error{
+    color:red;
+    border-bottom: 1px dashed red;
+    border-top: 1px dashed red;
+  }
+}
+
+
+/********************************************************************************************
+  Button
+*********************************************************************************************/
+.button{
+  &.small{
+    padding: 5px 10px;
+  }
+}
+.centralize{
+  text-align: center;
+}
+
+
+
+/********************************************************************************************
+   Preference center
+*********************************************************************************************/
+.maltyst-preference-center{
+  border: 1px dotted #cccccc;
+  padding: 16px;
+  min-height: 300px;
+
+  .maltyst-segment-li{
+    list-style-type: none;
+  }
+
+  .maltyst-segments{
+    margin: 0;
+    padding: 0;
+  }
+
+  .maltyst-segments-all{
+    padding: 20px 0 30px 0;
+  }
+}
+
+/*Spinner here*/
+.maltystloader {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  animation: maltystspin 2s linear infinite;
+  display:inline-block;
+  margin-right:14px;
+}
+.maltysthide{
+  display: none !important;
+}
+  
+@keyframes maltystspin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
