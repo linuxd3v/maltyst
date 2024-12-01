@@ -1,0 +1,240 @@
+<div class="wrap">
+
+    <h1>Maltyst Settings</h1>
+
+    <p>
+        Settings for Maltyst wordpress plugin, providing mautic v3 integration.<br/>
+    </p>
+
+
+    <form method="post" action="options.php">
+        <?php settings_fields( 'maltyst-settings' ); ?>
+        <?php do_settings_sections( 'maltyst-settings' ); ?>
+
+            <h2 class="title">Mautic instance location:</h2>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">
+                        Mautic instance full url:
+                    </th>
+                    <td>
+                        <input type="text" size="40" name="maltystMauticApiUrl" value="<?= esc_attr(get_option( 'maltystMauticApiUrl' )); ?>"/>
+                        <p class="description">
+                            Full mautic url, including protocol.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
+            <h2 class="title">Mautic instance basic authentication:</h2>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Mautic username:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystMauticBasicUsername" value="<?= esc_attr(get_option( 'maltystMauticBasicUsername' )); ?>"/>
+                        <p class="description">
+                            Note: basic auth username. Token authentication is not currently supported.
+                        </p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Mautic password:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystMauticBasicPassword" value="<?= esc_attr(get_option( 'maltystMauticBasicPassword' )); ?>"/>
+                        <p class="description">
+                            Note: basic auth password. Token authentication is not currently supported.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
+            <h2 class="title">Post updates notifications:</h2>
+            <p class="description">
+                Enable new post publish notifications using mautic as a delivery service.<br/>
+                On post transitioninig to published state from unpublished state - new segment email will be generated and sent
+                to a designated segment.
+            </p>
+            <table class="form-table">
+
+
+                <tr valign="top">
+                    <th scope="row">Throwaway detection:</th>
+                    <td>
+                        <input id="maltystThrowawayDetection" name="maltystThrowawayDetection" type="checkbox" value="1" <?= checked( 1, get_option('maltystThrowawayDetection'), false );?> />
+                        <label for="maltystThrowawayDetection"> Enable optin check</label>
+                        <p class="description">
+                            <label for="maltystThrowawayDetection">Some folks might prefer allowing mailinator-type emails on optin, for testing or other purposes.</label>
+                        <p/>
+                    </td>
+                </tr>
+            
+
+
+                <tr valign="top">
+                    <th scope="row">Enable post notifications:</th>
+                    <td>
+                        <input id="maltystPostPublishNotify" name="maltystPostPublishNotify" type="checkbox" value="1" <?= checked( 1, get_option('maltystPostPublishNotify'), false );?> />
+                        <label for="maltystPostPublishNotify">Notify of new posts</label>
+                    </td>
+                </tr>
+
+
+
+                <tr valign="top">
+                    <th scope="row">Enable welcome email:</th>
+                    <td>
+                        <input id="maltystWelcomeEmail" name="maltystWelcomeEmail" type="checkbox" value="1" <?= checked( 1, get_option('maltystWelcomeEmail'), false );?> />
+                        <label for="maltystWelcomeEmail">Enable welcome email</label>
+                    </td>
+                </tr>
+
+
+
+
+                <tr valign="top">
+                    <th scope="row">Segment name:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystPostPublishNotifySegmentName" value="<?= esc_attr(get_option( 'maltystPostPublishNotifySegmentName' )); ?>"/>
+                        <p class="description">
+                            <label for="maltystPostPublishNotify">Segment name to which we will be sending post notifications.
+                        </p>
+                    </td>
+                </tr>
+                
+
+                <tr valign="top">
+                    <th scope="row">Excerpt words:</th>
+                    <td>
+                        <input type="text" size="20" name="maltystPostPublishNotifyExcerptLen" value="<?= esc_attr(get_option( 'maltystPostPublishNotifyExcerptLen' )); ?>"/>
+                        <p class="description">
+                            <label for="maltystPostPublishNotifyExcerptLen">For those blog posts that do not have  excerpts - it will be generating on the fly.
+                                Specify the excerpt length. Defaults to 150 if not specified.
+                        </p>
+                    </td>
+                </tr>
+
+
+
+                mautic templates:
+                <tr valign="top">
+                    <th scope="row">Mautic Welcome template:</th>
+                    <td>
+                        <input type="text" size="20" name="maltystPostPublishNotifyMauticTemplateWelcome" value="<?= esc_attr(get_option( 'maltystPostPublishNotifyMauticTemplateWelcome' )); ?>"/>
+                        <p class="description">
+                            <label for="maltystPostPublishNotifyMauticTemplateWelcome">Mautic Welcome template. It must be present in mautic.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr valign="top">
+                    <th scope="row">Mautic Double Optin template:</th>
+                    <td>
+                        <input type="text" size="20" name="maltystPostPublishNotifyMauticTemplateDbl" value="<?= esc_attr(get_option( 'maltystPostPublishNotifyMauticTemplateDbl' )); ?>"/>
+                        <p class="description">
+                            <label for="maltystPostPublishNotifyMauticTemplateDbl">Mautic double optin template. It must be present in mautic.
+                        </p>
+                    </td>
+                </tr>
+
+
+
+
+                <tr valign="top">
+                    <th scope="row">From email address:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystPostPublishNotifyFromAddress" value="<?= esc_attr(get_option( 'maltystPostPublishNotifyFromAddress' )); ?>"/>
+                        <p class="description">
+                            <strong>Optional</strong>. Use if you want to override mautic instance settings. <br/>
+                            Note - most free SMTP servers will not let you override from email field.<br/>
+                            Be sure to confirm that whatever email you put here is allowed to be sent from by your provider.
+                        </p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">From name:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystPostPublishNotifyFromName" value="<?= esc_attr(get_option( 'maltystPostPublishNotifyFromName' )); ?>"/>
+                        <p class="description">
+                            <strong>Optional</strong>. Use if you want to override mautic instance settings.
+                        </p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Reply-to email address:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystPostPublishNotifyReplyTo" value="<?= esc_attr(get_option( 'maltystPostPublishNotifyReplyTo' )); ?>"/>
+                        <p class="description">
+                            <strong>Optional</strong>. Use if you want to override mautic instance settings.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+            <h2 class="title">Preference center:</h2>
+            <table class="form-table">
+
+
+                <tr valign="top">
+                    <th scope="row">Preference Center url:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystPcUrl" value="<?= esc_attr(get_option( 'maltystPcUrl' )); ?>"/>
+                        <p class="description">
+                            Relative url of whatever page you embed preference center at, ex: <strong>/preference-center</strong>.
+                        </p>
+                    </td>
+                </tr>
+
+
+
+                <tr valign="top">
+                    <th scope="row">Double optin confirmation url:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystOptinConfirmationUrl" value="<?= esc_attr(get_option( 'maltystOptinConfirmationUrl' )); ?>"/>
+                        <p class="description">
+                            Relative url of whatever page you embed preference center at, ex: <strong>/email-optin-result</strong>.
+                        </p>
+                    </td>
+                </tr>
+                
+
+
+                <tr valign="top">
+                    <th scope="row">Preference center segments with segment ids (as JSON):</th>
+                    <td>
+                        
+                        
+                        <textarea name="maltystPcSegments" type="text" cols="60" rows="6" value="<?= esc_attr( get_option('maltystPcSegments')); ?>"><?= esc_html(get_option('maltystPcSegments')); ?></textarea>
+                        
+                        <p class="description">
+                            Note: expected format is mautic segment alias + mautic segment id in <strong>json</strong> format, ex: <i>{"marketing":2,"newposts":3,"recurring":4}</i><br/>
+                            Make sure these aliases do exist in mautic, as otherwise subscribers wont be able to activate their subscriptions.<br/>
+                            Yes - I know you're probably thinking - json? seriously? Yes - better UI is much needed, sorry.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
+
+            <h2 class="title">Other:</h2>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Blog logo url:</th>
+                    <td>
+                        <input type="text" size="40" name="maltystBlogLogoUrl" value="<?= esc_attr(get_option( 'maltystBlogLogoUrl' )); ?>"/>
+                        <p class="description">
+                            Note: this is for testing only.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
+
+        <?php submit_button(); ?>
+    </form>
+
+
+</div>

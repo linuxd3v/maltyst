@@ -1,0 +1,37 @@
+<div class="maltyst-preference-center">
+
+    <?php // Just hidden templates ?>
+    <div class="maltysthide maltysttemplates">
+        <li class="maltyst-segment-li">
+            <label>
+                <input type="checkbox" name="sname[]" value="1"> 
+                <span class="sname"></span><br/>
+                <span class="sdescription"></span>
+            </label>
+        </li>
+    </div>
+        
+
+    <form class="maltyst-pc" action="" method="post" data-initialized=false>
+        <?php // List of segments ?>
+        <ul class = "maltyst-segments"></ul>
+
+        <?php // Unsubscribe all segments ?>
+        <div class = "maltyst-segments-all maltysthide">
+
+            Unsubscribe From All above listing.<br/>
+            If you unsubscribe from all emails, we will have no way of notifying you of exclusive email discounts and coupons, site promotions or special offers.</br>
+            <button type="button" class="maltyst-unsubscribe-all button small">Unsubscribe from all</button>
+        </div>
+
+        <?php // Response area ?>
+        <div class="maltyst_result_msg maltysthide"></div>
+
+        <?php // Save button ?>
+        <p class="centralize">
+            <span class="maltystloader maltysthide"></span>
+            <input type="button" class="button large maltysthide" name="maltyst_refresh_btn" value="Refresh subscriptions">
+            <input type="submit" class="button large maltysthide" name="maltyst_submit_btn" value="Save Preferences">
+        </p>
+    </form>
+</dsiv>
