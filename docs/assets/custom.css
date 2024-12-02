@@ -1,0 +1,86 @@
+/* Global  */
+body {
+    background-color: #f9f9f9;
+}
+
+
+/* Utils */
+.orbitron-nav {
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+.center{
+    text-align: center;
+}
+
+
+/* Header area */
+header {
+    text-align: center;
+}
+#sitelogo{
+    margin-bottom: 1em;
+}
+header img {
+    /* max-height: 80px; */
+    display: block;
+    margin: 0 auto;
+}
+
+.siteheadline{
+    letter-spacing: 0.2em;
+}
+
+
+
+  
+
+
+section{
+    width: 560px;
+}
+section h1{
+    margin-bottom: 2rem;
+}
+
+nav a{
+    display: block;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+}
+nav a+a{
+    margin-top: 1em;
+}
+
+
+
+
+
+/* Footer area */
+footer{
+    text-align: center;
+}
+.bmab {
+    text-decoration: none;
+    font-size: 16px;
+    color: #e09e15;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+.bmab:hover, .bmab:focus {
+    color: #FBB117;
+}
+
+.bmab i {
+    font-size: 20px;
+    color: #e09e15;
+}
+.bmab:hover i {
+    color: #FBB117;
+}

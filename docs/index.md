@@ -1,8 +1,8 @@
-
-# Maltyst - mautic wordpress integration plugin (unofficial)
+# Mautic wordpress integration plugin for newsletters
 
 ## Status:
 Note  - this should be looked at as a still early project. Use with caution.
+<span style="color:red;">DO not try this yet. im still working on pushing it out. dec 2nd 2024</span>
 
 ## Purpose:
 Provide wordpress integration with mautic instance. Goal is to make all or majority of consumer interactions to be be done through wordpress site 
@@ -12,8 +12,8 @@ This may be more preferred workflow for some people that would prefer not to exp
     
 Working with Wordpress is the last thing I want to do on this earth, so buy me a beer god damn it.  
   
-  
-Highlights:
+
+## Features and highlights:
   
 - **double optin functionality**  
 User gets confirmation email and has to click to confirm enrollment in order to be added onto specific mautic segments. Confirmation url is on the wordress site.
@@ -124,26 +124,3 @@ Double optin:
   *  newposts  - new posts notifications
   *  marketing - whatever 
   *  recurring
-
-
-## Development:
-- git checkout and branch off  
-- update backend dependencies via composer.
-This will install backend deps (mautic api etc).
-```bash
-cd ./backend && composer install
-```
-
-
-- `npm install` - install dependencies needed for public assets
-- `npm run start` - combine/sass/minify/babel - etc.  typical gulp-ified frontend processing. 
-- `npm run gen-dist` - generate a distributable plugin bundle
-
-
-## Todo  
-
-- make `double-optin` optional   
-- **mjml** parsing at the email dispatch time. So going away with pre-compilation.
-  This  way we can make mjml modifiable and expose in admin. Can probably solve this by implementing **mjml** api instead and requiring use to provide mjml token. 
-- perhaps add optin captcha  
-- perhaps add optin throttling  

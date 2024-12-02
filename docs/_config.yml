@@ -4,12 +4,12 @@ plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
 
 # Base settings
-title: Maltyst for mautic
+title: Maltyst For Mautic
 description: Wordpress plugin for  integration with mautic instance. The goal is to facilitate email collection and allow easy newsletter setup with mautic as a backend.
 logo: /assets/images/logo.jpeg
 
-include:
-  - /assets/style.css
+# include:
+#   - /assets/style.css
 
 markdown: kramdown
 sass:

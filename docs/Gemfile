@@ -1,0 +1,17 @@
+source "https://rubygems.org"
+
+# To test locally:
+
+# Configure gems path to store installed gems locally (avoid root):
+# export GEM_HOME="$HOME/.local/share/gem"  
+# export PATH="$GEM_HOME/bin:$PATH"  
+
+# Install gem dependencies: 
+# bundle install
+# bundle exec jekyll serve
+  
+# Launch the site from ./docs directory:   
+# bundle exec jekyll serve --source . --host 192.168.10.103
+
+gem "jekyll"
+gem "github-pages", group: :jekyll_plugins
