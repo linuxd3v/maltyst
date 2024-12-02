@@ -8,6 +8,9 @@ title: Maltyst for mautic
 description: Wordpress plugin for  integration with mautic instance. The goal is to facilitate email collection and allow easy newsletter setup with mautic as a backend.
 logo: /assets/images/logo.jpeg
 
+include:
+  - assets/style.css
+
 markdown: kramdown
 sass:
   style: compressed
