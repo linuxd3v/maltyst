@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- purely for buy me a beer -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
 {% seo %}
     <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
 
@@ -44,10 +47,18 @@
       </section>
       <footer>
         {% if site.github.is_project_page %}
+        <p>
+          <a href="https://buymeacoffee.com/linuxd3v" target="_blank" rel="noopener noreferrer" class="bmab">
+            <i class="fa-solid fa-beer-mug-empty" style="color: yellow;"></i> Buy me a beer
+          </a>
+        </p>
         <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
+        
         {% endif %}
         <!-- <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p> -->
       </footer>
+
+
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
   </body>
