@@ -9,7 +9,7 @@ description: Wordpress plugin for  integration with mautic instance. The goal is
 logo: /assets/images/logo.jpeg
 
 include:
-  - assets/style.css
+  - /assets/style.css
 
 markdown: kramdown
 sass:
