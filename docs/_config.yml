@@ -1,0 +1,4 @@
+theme: jekyll-theme-minimal
+markdown: kramdown
+sass:
+  style: compressed
