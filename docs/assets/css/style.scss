@@ -1,6 +1,14 @@
+---
+---
+
+@import "{{ site.theme }}";
+
 /* Global  */
 body {
     background-color: #f9f9f9;
+}
+p {
+    font-style: normal;
 }
 
 
@@ -22,6 +30,8 @@ header {
 }
 #sitelogo{
     margin-bottom: 1em;
+    border-radius: 200px;
+    width: 12em;
 }
 header img {
     /* max-height: 80px; */
@@ -51,11 +61,13 @@ nav a{
     text-transform: uppercase;
     font-size: 1.2rem;
 }
+nav a.active, nav a:hover {
+    font-weight: bold;
+}
+
 nav a+a{
     margin-top: 1em;
 }
-
-
 
 
 
