@@ -2,7 +2,7 @@
     "name": "linuxd3v/maltyst",
     "description": "Maltyst - Unofficial Mautic wordpress integration. Allows easy newsletter setup with mautic as a backend",
     "type": "wordpress-plugin",
-    "homepage": "https://github.com/linuxd3v/maltyst",
+    "homepage": "https://www.maltyst.com",
     "support": {
         "issues": "https://github.com/linuxd3v/maltyst/issues",
         "source": "https://github.com/linuxd3v/maltyst"
