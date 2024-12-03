@@ -16,7 +16,8 @@ Working with Wordpress is the last thing I want to do on this earth, so buy me a
 ## Features and highlights:
   
 - **double optin functionality**  
-User gets confirmation email and has to click to confirm enrollment in order to be added onto specific mautic segments. Confirmation url is on the wordress site.
+User gets confirmation email and has to click to confirm enrollment in order to be added onto specific mautic segments. Confirmation url is on the wordress site.  
+Note - for double optin transaction emails - plugin will use whatever smtp/mail server was configured in your wordpress instance.  
   
 - **throwaway emails detection and block**  
 Emails from throwaway services like mailinator are not allowed.  This is not bulletprof and relies on third party library.
