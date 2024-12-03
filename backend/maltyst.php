@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Maltyst
-Plugin URI: https://gitlab.com/linuxd3v/maltyst
+Plugin URI: https://www.maltyst.com
 Description: Maltyst - Unofficial Mautic wordpress integration. Allows easy newsletter setup with mautic as a backend
 Version: 0.1.3
 Author: linuxd3v
-Author URI: https://gitlab.com/linuxd3v
+Author URI: https://github.com/linuxd3v
 License: GPL-3.0-only
 */
 
