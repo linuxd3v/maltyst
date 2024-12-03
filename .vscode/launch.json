@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Jekyll: Build and Serve",
+            "type": "node", 
+            "request": "launch",
+            "runtimeExecutable": "bash",
+            "args": [
+                "-c",
+                "reset && bundle exec jekyll serve --source . --host 192.168.10.103"
+            ],
+            "cwd": "${workspaceFolder}/docs",
+            "console": "integratedTerminal"
+        }
+    ]
+}
