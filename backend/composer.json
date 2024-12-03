@@ -2,21 +2,41 @@
     "name": "linuxd3v/maltyst",
     "description": "Maltyst - Unofficial Mautic wordpress integration. Allows easy newsletter setup with mautic as a backend",
     "type": "wordpress-plugin",
+    "homepage": "https://github.com/linuxd3v/maltyst",
+    "support": {
+        "issues": "https://github.com/linuxd3v/maltyst/issues",
+        "source": "https://github.com/linuxd3v/maltyst"
+    },
     "license": "GPL-3.0-only",
     "authors": [
         {
             "name": "linuxd3v"
         }
     ],
+    "keywords": [
+        "wordpress",
+        "mautic",
+        "newsletter",
+        "plugin",
+        "mautic wordpress integration",
+        "mautic wordpress",
+        "mautic wordpress newsletters"
+    ],
     "minimum-stability": "stable",
     "require": {
         "php": "^8.1",
         "ext-curl": "*",
         "ext-json": "*",
-        "fgribreau/mailchecker": "^6.0.13",
-        "league/plates": "^3.6.0",
-        "mautic/api-library": "^3.1.0",
-        "mustache/mustache": "^v2.14.2"
+        "fgribreau/mailchecker": "6.0.*",
+        "league/plates": "3.6.*",
+        "mautic/api-library": "3.1.*",
+        "mustache/mustache": "v2.14.*"
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        },
+        "sort-packages": true
     },
     "require-dev": {
         "mmucklo/krumo": "^0.7.3",
