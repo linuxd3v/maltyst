@@ -1,5 +1,5 @@
 {
     "intelephense.environment.includePaths": [
-        "./backend/vendor/php-stubs/wordpress-stubs"
+        "backend/vendor/php-stubs/wordpress-stubs"
     ]
 }
