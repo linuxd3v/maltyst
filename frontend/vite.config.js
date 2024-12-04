@@ -1,7 +1,5 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-// import { exec } from 'child_process';
-// import mjml2html from 'mjml';
 import fs from 'fs';
 import * as path from 'path';
 import fse from 'fs-extra';
@@ -11,19 +9,16 @@ import zlib from "zlib";
 import gzipPlugin from 'rollup-plugin-gzip';
 import { merge } from 'lodash-es';
 
-//Theme name
-const SITE_THEME_NAME = 'wpmaltyst';
-
-
-//Change outDir based on theme build presence
-let outDir = path.resolve(__dirname, '..', 'static') + '/dist-' + SITE_THEME_NAME
-
+//Build directory
+const buildParent = path.resolve(__dirname, '..', 'plugin-dist');
+const buildDir = buildParent + '/maltyst';
+const backendDir = path.resolve(__dirname, '..', 'bakend');
 
 let commonConfig = {
   root: __dirname,
   build: {
     manifest: true,
-    outDir: outDir,
+    outDir: buildDir,
 
     //Bundles are needed in all envs
     rollupOptions: {
@@ -38,7 +33,7 @@ let commonConfig = {
       //   sourcemap: true,
       //   entryFileNames: 'maltyst.min.js',
       //   chunkFileNames: '[name]-[hash].js',
-      //   assetFileNames: '[name]-[hash].[ext]',
+      //   assetFileNames: '[name]-[hash].[ext]',buildDir
       //   dir: '../dist',
       // },
     },
@@ -90,54 +85,30 @@ let productionConfig = {
 };
 
 
-
-
-// MJML Compilation Helper
-// const compileMJML = () => {
-//   const inputPath = './assets/mjml/email-template-newpost.mjml';
-//   const outputPath = './dist/html/email-template-newpost.html';
-
-//   const mjmlContent = fs.readFileSync(inputPath, 'utf-8');
-//   const result = mjml2html(mjmlContent);
-//   fs.mkdirSync(resolve('./dist/html'), { recursive: true });
-//   fs.writeFileSync(outputPath, result.html);
-//   console.log(`Compiled MJML: ${inputPath} -> ${outputPath}`);
-// };
-
-// // Plugin to trigger MJML compilation
-// const viteMJMLPlugin = () => ({
-//   name: 'vite-plugin-mjml',
-//   buildStart() {
-//     compileMJML();
-//   },
-//   handleHotUpdate(ctx) {
-//     if (ctx.file.endsWith('.mjml')) {
-//       compileMJML();
-//     }
-//   },
-// });
-
 // Generate distributable archive helper
 const generateArchive = () => {
-  const dirTmp = './plugin-dist';
-  const realDir = `${dirTmp}/maltyst`;
+  console.log(`Generate archive: ${archivePath}`);
 
-  if (fs.existsSync(realDir)) fse.removeSync(realDir);
-  fs.mkdirSync(realDir, { recursive: true });
+  const filesToCopy = [
+    'html-views', 
+    'mjml', 
+    'src', 
+    'vendor', 
+    'maltyst.php', 
+  ];
 
-  const filesToCopy = ['dist', 'html-views', 'src', 'vendor', 'maltyst.php', 'readme.md'];
   filesToCopy.forEach((file) => {
-    const srcDir = `./${file}`;
-    const destDir = `${realDir}/${file}`;
+    const srcDir = `${backendDir}/${file}`;
+    const destDir = `${buildDir}/${file}`;
     fse.copySync(srcDir, destDir);
   });
 
-  const archivePath = `${dirTmp}/maltyst.zip`;
+  const archivePath = `${buildParent}/maltyst.zip`;
   const output = fs.createWriteStream(archivePath);
   const archive = archiver('zip');
 
   archive.pipe(output);
-  archive.directory(realDir, false);
+  archive.directory(buildDir, false);
   archive.finalize();
 
   console.log(`Generated archive: ${archivePath}`);
@@ -158,12 +129,3 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 
   return mergedOptions
 })
-
-
-// Define Vite configuration
-// export default defineConfig();
-
-// CLI Script to trigger archive generation (if needed)
-// if (process.env.NODE_ENV === 'production') {
-//   generateArchive();
-// }
