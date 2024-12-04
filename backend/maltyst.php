@@ -2,180 +2,127 @@
 /*
 Plugin Name: Maltyst
 Plugin URI: https://www.maltyst.com
-Description: Maltyst - Unofficial Mautic wordpress integration. Allows easy newsletter setup with mautic as a backend
+Description: Maltyst - Unofficial Mautic WordPress integration for easy newsletter setup.
 Version: 0.1.3
 Author: linuxd3v
 Author URI: https://github.com/linuxd3v
 License: GPL-3.0-only
+Text Domain: maltyst
 */
 
+// ============================================================================
+// Namespace
+// ============================================================================
+namespace Maltyst;
+
+defined('ABSPATH') || exit; // Exit if accessed directly.
 
 // ============================================================================
 // Constants
 // ============================================================================
-define('PREFIX', 'maltyst');
-if (is_ssl()) {
-    $ajaxUrl = admin_url( 'admin-ajax.php', 'https' );
-} else {
-    $ajaxUrl = admin_url( 'admin-ajax.php', 'http' );
-}
-define('AJAX_URL', $ajaxUrl);
-define('IS_SSL', is_ssl());
-
+define('MALTYST_VERSION', '0.1.3');
+define('MALTYST_PLUGIN_DIR', \plugin_dir_path(__FILE__));
+define('MALTYST_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('MALTYST_FETCH_URL', admin_url('admin-fetch.php', is_ssl() ? 'https' : 'http'));
 
 // ============================================================================
-// Dependencies
+// Autoload Dependencies
 // ============================================================================
-//Vendor dependencies
-include "vendor/autoload.php";
+if (!file_exists(MALTYST_PLUGIN_DIR . 'vendor/autoload.php')) {
+    wp_die(__('Missing Composer dependencies. Please run `composer install`.', 'maltyst'));
+}
+require_once MALTYST_PLUGIN_DIR . 'vendor/autoload.php';
 
-//Our depencencies
-require 'src/Utils.php';
-require 'src/SettingsUtils.php';
-require 'src/AdminMessage.php';
-
-require 'src/ViewController.php';
-require 'src/AjaxController.php';
-require 'src/SettingsController.php';
-
-require 'src/Database.php';
-require 'src/MauticAccess.php';
-
-
-try {
-    // ============================================================================
-    // Instantiating
-    // ============================================================================
-    
-    //Utils
-    $utils              = new Utils(); 
-    $settingsUtils      = new SettingsUtils(); 
-    
-    //Data services
-    $database           = new Database();
-    $mauticAccess       = new MauticAccess($settingsUtils); 
-
-    //Controllers
-    $viewController     = new ViewController($database, $utils, $mauticAccess, $settingsUtils);
-    $ajaxController     = new AjaxController($database, $utils, $mauticAccess, $settingsUtils);
-    $settingsController = new SettingsController($database, $utils, $mauticAccess, $settingsUtils);
-
-
-    // ============================================================================
-    // Registering Ajax handlers
-    // ============================================================================
-    add_action( 'wp_ajax_nopriv_maltystAjaxAcceptOptin', [$ajaxController, 'maltystAjaxAcceptOptin'] );
-    add_action( 'wp_ajax_maltystAjaxAcceptOptin', [$ajaxController, 'maltystAjaxAcceptOptin'] );
-
-    add_action( 'wp_ajax_nopriv_maltystAjaxGetSubscriptions', [$ajaxController, 'maltystAjaxGetSubscriptions'] );
-    add_action( 'wp_ajax_maltystAjaxGetSubscriptions', [$ajaxController, 'maltystAjaxGetSubscriptions'] );
-
-    add_action( 'wp_ajax_nopriv_maltystAjaxPostSubscriptions', [$ajaxController, 'maltystAjaxPostSubscriptions'] );
-    add_action( 'wp_ajax_maltystAjaxPostSubscriptions', [$ajaxController, 'maltystAjaxPostSubscriptions'] );
-
-    add_action( 'wp_ajax_nopriv_maltystAjaxPostOptinConfirmation', [$ajaxController, 'maltystAjaxPostOptinConfirmation'] );
-    add_action( 'wp_ajax_maltystAjaxPostOptinConfirmation', [$ajaxController, 'maltystAjaxPostOptinConfirmation'] );
-    
-
-
-
-    // ============================================================================
-    // Registering Assets
-    // ============================================================================
-    // wp_enqueue_scripts — front-end
-    // admin_enqueue_scripts — admin page
-    // login_enqueue_scripts — login page
-    function maltyst_frontend_assets() {
-        //wp_enqueue_style( 'admin-css', get_stylesheet_directory_uri() . '/admin/css/admin.css' );
-        //wp_enqueue_script( 'admin-js', get_stylesheet_directory_uri() . '/admin/js/admin.js', true );
-
-        wp_enqueue_style( 'maltyst', plugin_dir_url(__FILE__) . 'dist/css/maltyst.min.css' );
-        wp_enqueue_script('maltyst', plugin_dir_url(__FILE__) . 'dist/js/maltyst.min.js', ['jquery']);
-        wp_localize_script(
-            'maltyst',
-            'maltyst_data',
-            [
-                'ajax_url' => AJAX_URL,
-                'prefix'   => PREFIX,
-                'nonce'    => wp_create_nonce('ajax-nonce')
-            ]
-        );
-    }
-    add_action( 'wp_enqueue_scripts', 'maltyst_frontend_assets' );
-
-
-
-    // ============================================================================
-    // Registering New post publish notification
-    // ============================================================================
-    if ($settingsUtils->getSettingsValue('maltystPostPublishNotify') == 1) {
-        add_action( 'transition_post_status', [$viewController, 'notifyOfNewPost'], 10, 3 );
-    }
-
-
-    // ============================================================================
-    // Enable settings area
-    // ============================================================================
-    $callable = [$settingsController, 'maltystRegisterSettings'];
-    add_action('admin_menu', $callable);
-
-
-    
-    // ============================================================================
-    // Registering activation/deactivation hooks
-    // ============================================================================
-
-    //On deactivation - we should at least disable cron job
-    function maltyst_deactivate() {
-        $timestamp = wp_next_scheduled( 'maltyst_cron_hook' );
-        wp_unschedule_event( $timestamp, 'maltyst_cron_hook' );
-    }
-
-
-    
-    //Hooks
-    register_activation_hook( __FILE__, [$database, 'initSchema'] );
-    register_deactivation_hook( __FILE__, 'maltyst_deactivate' );
-
-
-    // ============================================================================
-    // Registering CRONs
-    // ============================================================================
-    //Cleanup cron - removing records older then 1 month
-    add_action('maltyst_cron_hook', [$database, 'cleanupExpired']);
-    if ( ! wp_next_scheduled( 'maltyst_cron_hook' ) ) {
-        wp_schedule_event( time(), 'daily', 'maltyst_cron_hook' );
-    }
-    
-
-    // ============================================================================
-    // Registering shortcodes
-    // ============================================================================
-    $forms = [
-        'maltyst_optin_form'         => [$viewController, 'renderOptinForm'],
-        'maltyst_preference_center'  => [$viewController, 'renderPreferenceCenter'],
-        'maltyst_optin_confirmation' => [$viewController, 'renderConfirmation'],
-        'maltyst_post_browser_view'  => [$viewController, 'emailPostBrowserView'],
-    ];
-    foreach($forms as $shortcode => $callable) {
-        add_shortcode( $shortcode, $callable );
-    }
-} catch (\Exception $e) {
-
-    //Register new message to show
-    new AdminMessage($e->getMessage());
-
-    //Send to default php logging mechanism
-    error_log($e->getMessage());
-
-    //Let's respond just to make sure we give some feedback to UI
-    if (wp_doing_ajax()) {
-        $ajaxResponse = [];
-        $ajaxResponse['e']     = $e->getMessage();
-        $ajaxResponse['error'] = "Encountered unrecoverable error.";
-        wp_send_json_error($ajaxResponse, 500);
-    }
-
+// Include core files
+foreach (['Utils', 'SettingsUtils', 'AdminMessage', 'ViewController', 'FetchController', 'SettingsController', 'Database', 'MauticAccess'] as $class) {
+    require_once MALTYST_PLUGIN_DIR . "src/{$class}.php";
 }
 
-?>
+// ============================================================================
+// Main Plugin Class
+// ============================================================================
+final class Plugin
+{
+    private static ?Plugin $instance = null;
+
+    private $utils;
+    private $settingsUtils;
+    private $database;
+    private $mauticAccess;
+    private $viewController;
+    private $fetchController;
+    private $settingsController;
+
+    private function __construct()
+    {
+        // Initialize dependencies
+        $this->utils = new Utils();
+        $this->settingsUtils = new SettingsUtils();
+        $this->database = new Database();
+        $this->mauticAccess = new MauticAccess($this->settingsUtils);
+        $this->viewController = new ViewController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+        $this->fetchController = new FetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+        $this->settingsController = new SettingsController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+
+        $this->registerHooks();
+    }
+
+    public static function getInstance(): Plugin
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    private function registerHooks()
+    {
+        // Register FETCH handlers
+        add_action('wp_fetch_nopriv_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
+        add_action('wp_fetch_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
+
+        // Enqueue assets
+        add_action('wp_enqueue_scripts', [$this, 'enqueueAssets']);
+
+        // Register settings
+        add_action('admin_menu', [$this->settingsController, 'maltystRegisterSettings']);
+
+        // CRON jobs
+        add_action('maltyst_cron_hook', [$this->database, 'cleanupExpired']);
+        if (!wp_next_scheduled('maltyst_cron_hook')) {
+            wp_schedule_event(time(), 'daily', 'maltyst_cron_hook');
+        }
+
+        // Activation and deactivation hooks
+        register_activation_hook(__FILE__, [$this->database, 'initSchema']);
+        register_deactivation_hook(__FILE__, [$this, 'deactivatePlugin']);
+    }
+
+    public function enqueueAssets()
+    {
+        wp_enqueue_style('maltyst', MALTYST_PLUGIN_URL . 'dist/css/maltyst.min.css', [], MALTYST_VERSION);
+        wp_enqueue_script('maltyst', MALTYST_PLUGIN_URL . 'dist/js/maltyst.min.js', ['jquery'], MALTYST_VERSION, true);
+        wp_localize_script('maltyst', 'maltyst_data', [
+            'fetch_url' => MALTYST_FETCH_URL,
+            'nonce' => wp_create_nonce('fetch-nonce'),
+        ]);
+    }
+
+    public function deactivatePlugin()
+    {
+        $timestamp = wp_next_scheduled('maltyst_cron_hook');
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, 'maltyst_cron_hook');
+        }
+    }
+}
+
+// ============================================================================
+// Initialize Plugin
+// ============================================================================
+function maltyst_init()
+{
+    Plugin::getInstance();
+}
+
+add_action('plugins_loaded', 'Maltyst\\maltyst_init');

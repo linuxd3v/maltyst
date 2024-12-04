@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 use Fgribreau\MailChecker;
 
-class AjaxController
+class FetchController
 {
 
     private $db;
@@ -22,7 +22,7 @@ class AjaxController
     //===========================================================================
     // Updating subscriptions for user
     //===========================================================================
-    public function maltystAjaxPostSubscriptions ()
+    public function maltystFetchPostSubscriptions ()
     {
         // Params
         $nonce  = isset($_POST['security']) ? $_POST['security'] : null;
@@ -32,7 +32,7 @@ class AjaxController
         $defaultResponse = [];
     
         // 0. Validate nonce
-        if ( ! wp_verify_nonce( $nonce, 'ajax-nonce' ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'fetch-nonce' ) ) {
             $defaultResponse['error'] = 'Form failed validation';
             wp_send_json_error($defaultResponse, 400);
         }
@@ -110,7 +110,7 @@ class AjaxController
     //===========================================================================
     // Retrieving subscriptions for a user
     //===========================================================================
-    public function maltystAjaxGetSubscriptions ()
+    public function maltystFetchGetSubscriptions ()
     {
         // Params
         $nonce   = isset($_GET['security']) ? $_GET['security'] : null;
@@ -120,7 +120,7 @@ class AjaxController
         $defaultResponse = [];
 
         // 0. Validate nonce
-        if ( ! wp_verify_nonce( $nonce, 'ajax-nonce' ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'fetch-nonce' ) ) {
             $defaultResponse['error'] = 'Form failed validation';
             wp_send_json_error($defaultResponse, 400);
         }
@@ -190,7 +190,7 @@ class AjaxController
     //===========================================================================
     // Accepting user optin - this will dispatch double-optin email
     //===========================================================================
-    public function maltystAjaxAcceptOptin ()
+    public function maltystFetchAcceptOptin ()
     {
         // Check for nonce security
         $nonce = $_POST['security'];
@@ -198,7 +198,7 @@ class AjaxController
         $defaultResponse = [];
     
         // Validate nonce
-        if ( ! wp_verify_nonce( $nonce, 'ajax-nonce' ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'fetch-nonce' ) ) {
             $defaultResponse['error'] = 'Form failed validation';
             wp_send_json_error($defaultResponse, 400);
         }
@@ -286,7 +286,7 @@ class AjaxController
     //===========================================================================
     // Processing double optin confirmation
     //===========================================================================
-    public function maltystAjaxPostOptinConfirmation()
+    public function maltystFetchPostOptinConfirmation()
     {
 
         // Params
@@ -296,7 +296,7 @@ class AjaxController
         $defaultResponse = [];
     
         // Validate nonce
-        if ( ! wp_verify_nonce( $nonce, 'ajax-nonce' ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'fetch-nonce' ) ) {
             $defaultResponse['error'] = 'Form failed validation';
             wp_send_json_error($defaultResponse, 400);
         }
