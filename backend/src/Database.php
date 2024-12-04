@@ -141,7 +141,7 @@ class Database
     public function initSchema(): void
     {
         global $wpdb;
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        require_once constant('ABSPATH') . 'wp-admin/includes/upgrade.php';
 
         $charsetCollate = $wpdb->get_charset_collate();
 
@@ -207,7 +207,7 @@ class Database
         global $wpdb;
 
         $query = $wpdb->prepare("SELECT * FROM $table WHERE $column = %s", $value);
-        $result = $wpdb->get_row($query, ARRAY_A);
+        $result = $wpdb->get_row($query, 'ARRAY_A');
 
         return $result ?: null;
     }
@@ -220,6 +220,6 @@ class Database
         global $wpdb;
 
         $query = "SELECT * FROM $table";
-        return $wpdb->get_results($query, ARRAY_A);
+        return $wpdb->get_results($query, 'ARRAY_A');
     }
 }
