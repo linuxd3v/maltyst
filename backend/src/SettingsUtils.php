@@ -1,192 +1,166 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+
+namespace Maltyst;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 
 class SettingsUtils
 {
-
-    //Let's define all supported fields
-    private $settingsFields = [
-
-        //Mautic api details
+    // Define all supported fields and their attributes
+    private array $settingsFields = [
+        // Mautic API details
         'maltystMauticApiUrl' => [
-            'type'                => 'string',
-            'description'         => 'Full url of a mautic instance',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Full URL of a Mautic instance',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystMauticBasicUsername' => [
-            'type'                => 'string',
-            'description'         => 'Username of a mautic basic auth user',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Username for Mautic basic auth',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystMauticBasicPassword' => [
-            'type'                => 'string',
-            'description'         => 'Password of a mautic basic auth user',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Password for Mautic basic auth',
+            'show_in_rest' => false,
+            'default' => '',
         ],
-
-
+        // Templates
         'maltystPostPublishNotifyMauticTemplateWelcome' => [
-            'type'                => 'string',
-            'description'         => 'Welcome mautic template',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Template for the welcome email',
+            'show_in_rest' => false,
+            'default' => '',
         ],
-
         'maltystPostPublishNotifyMauticTemplateDbl' => [
-            'type'                => 'string',
-            'description'         => 'Double optin mautic template',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Template for the double opt-in email',
+            'show_in_rest' => false,
+            'default' => '',
         ],
-
-
-
-        //Double optin / Optin
+        // Double opt-in and throwaway detection
         'maltystThrowawayDetection' => [
-            'type'                => 'number',
-            'description'         => 'Enable throwaway detection',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => 0,
+            'type' => 'number',
+            'description' => 'Enable throwaway email detection',
+            'show_in_rest' => false,
+            'default' => 0,
         ],
-
-
         'maltystWelcomeEmail' => [
-            'type'                => 'number',
-            'description'         => 'Enable welcome email',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => 0,
+            'type' => 'number',
+            'description' => 'Enable welcome email functionality',
+            'show_in_rest' => false,
+            'default' => 0,
         ],
-
-        
-
-
-
+        // Excerpt configuration
         'maltystPostPublishNotifyExcerptLen' => [
-            'type'                => 'string',
-            'description'         => 'number of words to use for excerpt',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Number of words to use for the excerpt',
+            'show_in_rest' => false,
+            'default' => '',
         ],
-        
-
-
-
-        //Preference center
+        // Preference center
         'maltystPcUrl' => [
-            'type'                => 'string',
-            'description'         => 'Preference center url',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'URL for the preference center',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystOptinConfirmationUrl' => [
-            'type'                => 'string',
-            'description'         => 'Double optin confirmation url',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'URL for double opt-in confirmation',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystPcSegments' => [
-            'type'                => 'string',
-            'description'         => 'Preference center segments',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'JSON-encoded list of preference center segments',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystBlogLogoUrl' => [
-            'type'                => 'string',
-            'description'         => 'URL path to the blog logo',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'URL for the blog logo',
+            'show_in_rest' => false,
+            'default' => '',
         ],
-
-
-
-        //New post notification
+        // Post notification settings
         'maltystPostPublishNotify' => [
-            'type'                => 'number',
-            'description'         => 'Enable post publish notifications',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => 0,
+            'type' => 'number',
+            'description' => 'Enable post-publish notifications',
+            'show_in_rest' => false,
+            'default' => 0,
         ],
         'maltystPostPublishNotifySegmentName' => [
-            'type'                => 'string',
-            'description'         => 'Mautic segment name to use for notifications',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Mautic segment name for notifications',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystPostPublishNotifyFromAddress' => [
-            'type'                => 'string',
-            'description'         => 'From field email address mautic should use',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'From email address for Mautic',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystPostPublishNotifyFromName' => [
-            'type'                => 'string',
-            'description'         => 'From field name mautic should use',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'From name for Mautic emails',
+            'show_in_rest' => false,
+            'default' => '',
         ],
         'maltystPostPublishNotifyReplyTo' => [
-            'type'                => 'string',
-            'description'         => 'Reply-to email address mautic should use',
-            //'sanitize_callback' => '(callable) A callback function that sanitizes the option's value.',
-            'show_in_rest'        => false,
-            'default'             => '',
+            'type' => 'string',
+            'description' => 'Reply-to email address for Mautic',
+            'show_in_rest' => false,
+            'default' => '',
         ],
     ];
 
-
     public function __construct()
     {
-
+        // Constructor is empty but allows for future initialization
     }
 
-    public function getSettingsFields()
+    /**
+     * Returns the definitions for all settings fields
+     */
+    public function getSettingsFields(): array
     {
         return $this->settingsFields;
     }
 
-    /*
-     * Let's read and return all currently defined settings
+    /**
+     * Reads and returns all currently defined settings
      */
-    public function getSettingsValues()
+    public function getSettingsValues(): array
     {
         $allDefined = [];
 
-        foreach($this->settingsFields as $sName => $sAttrs) {
+        foreach ($this->settingsFields as $fieldName => $attributes) {
+            // Retrieve and sanitize the option value
+            $value = trim((string) get_option($fieldName));
 
-            $var = trim(get_option($sName));
-            if ($sName === 'maltystPcSegments') {
-                $var = empty($var) ? [] : json_decode($var, true);
+            // Decode JSON for specific settings
+            if ($fieldName === 'maltystPcSegments') {
+                $value = empty($value) ? [] : json_decode($value, true);
             }
-            
-            $allDefined[$sName] = $var;
+
+            $allDefined[$fieldName] = $value;
         }
 
         return $allDefined;
     }
 
-    public function getSettingsValue($sName = '')
+    /**
+     * Retrieves the value of a specific setting
+     */
+    public function getSettingsValue(string $fieldName): mixed
     {
         $allSettings = $this->getSettingsValues();
-        
-        return $allSettings[$sName];
+        return $allSettings[$fieldName] ?? null;
     }
-
 }
