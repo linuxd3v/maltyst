@@ -9,45 +9,92 @@ import gzipPlugin from 'rollup-plugin-gzip';
 import { merge } from 'lodash-es';
 
 const buildParent = path.resolve(__dirname, '..', 'plugin-dist');
-console.log(buildParent);
-const buildDir = `${buildParent}/maltyst`;
-console.log(buildDir);
+const buildDir = path.join(buildParent, 'maltyst');
 const backendDir = path.resolve(__dirname, '..', 'backend');
+const FILES_TO_COPY = ['html-views', 'mjml', 'src', 'vendor', 'maltyst.php'];
+
+// Ensure required directories exist
+if (!fs.existsSync(buildParent)) {
+  fs.mkdirSync(buildParent, { recursive: true });
+}
 
 // Generate distributable archive helper
-const generateArchive = () => {
-  const archivePath = `${buildParent}/maltyst.zip`;
+const generateArchive = async () => {
+  try {
+    const archivePath = path.join(buildParent, 'maltyst.zip');
+    console.log(`[INFO] Generating archive at: ${archivePath}`);
 
-  console.log(`Generating archive at: ${archivePath}`);
+    // Copy necessary files
+    await Promise.all(
+      FILES_TO_COPY.map(async (file) => {
+        const srcDir = path.join(backendDir, file);
+        const destDir = path.join(buildDir, file);
+        if (fs.existsSync(srcDir)) {
+          await fse.copy(srcDir, destDir);
+          console.log(`[INFO] Copied ${srcDir} to ${destDir}`);
+        } else {
+          console.warn(`[WARNING] ${srcDir} does not exist and will not be copied.`);
+        }
+      })
+    );
 
-  const filesToCopy = ['html-views', 'mjml', 'src', 'vendor', 'maltyst.php'];
+    // Create the archive
+    const output = fs.createWriteStream(archivePath);
+    const archive = archiver('zip');
+    archive.pipe(output);
+    archive.directory(buildDir, false);
 
-  filesToCopy.forEach((file) => {
-    const srcDir = `${backendDir}/${file}`;
-    const destDir = `${buildDir}/${file}`;
-    fse.copySync(srcDir, destDir);
-  });
-
-  const output = fs.createWriteStream(archivePath);
-  const archive = archiver('zip');
-
-  archive.pipe(output);
-  archive.directory(buildDir, false);
-  archive.finalize();
-
-  console.log(`Generated archive at: ${archivePath}`);
+    await archive.finalize();
+    console.log(`[INFO] Archive generated successfully: ${archivePath}`);
+  } catch (err) {
+    console.error(`[ERROR] Error generating archive:`, err);
+  }
 };
 
 // Custom Vite Plugin
-const archivePlugin = () => ({
-  name: 'generate-archive',
+const createArchivePlugin = () => ({
+  name: 'vite-plugin-generate-archive',
   closeBundle: async () => {
-    generateArchive();
+    console.log(`[INFO] Running archive generation plugin...`);
+    await generateArchive();
   },
 });
 
 export default defineConfig(({ mode }) => {
-  const isSandbox = mode === 'sandbox';
+  console.log(`[INFO] Vite build mode: ${mode}`);
+
+  const modeConfigs = {
+    sandbox: {
+      build: {
+        emptyOutDir: false,
+        sourcemap: true,
+      },
+    },
+    production: {
+      build: {
+        emptyOutDir: true,
+        sourcemap: false,
+      },
+      plugins: [
+        brotli({
+          test: /\.(js|css|html|txt|xml|json|svg)$/,
+          options: {
+            params: {
+              [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_GENERIC,
+              [zlib.constants.BROTLI_PARAM_QUALITY]: 7,
+            },
+          },
+          minSize: 1000,
+        }),
+        gzipPlugin({
+          gzipOptions: {
+            level: 9,
+            minSize: 1000,
+          },
+        }),
+      ],
+    },
+  };
 
   const commonConfig = {
     root: __dirname,
@@ -61,47 +108,12 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [
-      archivePlugin(),
-    ],
+    plugins: [createArchivePlugin()],
   };
 
-  const sandboxConfig = {
-    build: {
-      emptyOutDir: false,
-      sourcemap: true,
-    },
-  };
-
-  const productionConfig = {
-    build: {
-      emptyOutDir: true,
-      sourcemap: false,
-    },
-    plugins: [
-      brotli({
-        test: /\.(js|css|html|txt|xml|json|svg)$/,
-        options: {
-          params: {
-            [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_GENERIC,
-            [zlib.constants.BROTLI_PARAM_QUALITY]: 7,
-          },
-        },
-        minSize: 1000,
-      }),
-      gzipPlugin({
-        gzipOptions: {
-          level: 9,
-          minSize: 1000,
-        },
-      }),
-    ],
-  };
-
-  const mergedOptions = merge(
-    commonConfig,
-    isSandbox ? sandboxConfig : productionConfig
-  );
+  // Merge common config with mode-specific config
+  const mergedOptions = merge(commonConfig, modeConfigs[mode] || {});
+  console.log(`[INFO] Final merged configuration:`, mergedOptions);
 
   return mergedOptions;
 });
