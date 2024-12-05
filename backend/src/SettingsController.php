@@ -1,69 +1,78 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+
+namespace Maltyst;
+
+use League\Plates\Engine;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 
 class SettingsController
 {
-    private $htmlDir;
-    private $platesEngine;
+    private string $htmlDir;
+    private Engine $platesEngine;
 
-    private $db;
-    private $utils;
-    private $mauticAccess;
-    private $settingsUtils;
+    private Database $db;
+    private Utils $utils;
+    private MauticAccess $mauticAccess;
+    private SettingsUtils $settingsUtils;
 
+    public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
+    {
+        // Initialize HTML rendering engine
+        $this->htmlDir = __DIR__ . '/../html-views';
+        $this->platesEngine = new Engine($this->htmlDir, 'phtml');
 
-
-
-
-    public function __construct($db, $utils, $mauticAccess, $settingsUtils)
-    {   
-        //HTML PHP rendering for views
-        $this->htmlDir  = __DIR__ . '/../html-views';
-        $this->platesEngine = new \League\Plates\Engine($this->htmlDir, 'phtml');
-
-
+        // Inject dependencies
         $this->db = $db;
         $this->utils = $utils;
         $this->mauticAccess = $mauticAccess;
         $this->settingsUtils = $settingsUtils;
     }
 
-    private function render($tpl, $data=[]) 
+    /**
+     * Renders a template with provided data
+     */
+    private function render(string $template, array $data = []): string
     {
         ob_start();
-        $html = $this->platesEngine->render($tpl, $data);
+        $html = $this->platesEngine->render($template, $data);
         echo $html;
         return ob_get_clean();
     }
 
-
-
-    public function maltystRegisterSettings($post)
+    /**
+     * Registers Maltyst settings page and fields
+     */
+    public function maltystRegisterSettings(): void
     {
-        $page_title = 'Maltyst Settings';
-        $menu_title = 'Maltyst';
+        $pageTitle = 'Maltyst Settings';
+        $menuTitle = 'Maltyst';
         $capability = 'manage_options';
-        $menu_slug  = 'maltyst';
-        $callable   = [$this, 'maltystShowSettings'];
+        $menuSlug = 'maltyst';
 
-        add_options_page( $page_title, $menu_title, $capability, $menu_slug, $callable, $position = null );
+        // Add settings page to the WordPress admin menu
+        add_options_page($pageTitle, $menuTitle, $capability, $menuSlug, [$this, 'maltystShowSettings']);
 
-
-        //Registering Settings fields:
+        // Register settings fields dynamically
         $settingsFields = $this->settingsUtils->getSettingsFields();
-        foreach($settingsFields as $settingsFieldName => $settingsFieldArgs) {
-            register_setting( 'maltyst-settings', $settingsFieldName,  $settingsFieldArgs);
+        foreach ($settingsFields as $fieldName => $fieldArgs) {
+            register_setting('maltyst-settings', $fieldName, $fieldArgs);
         }
     }
 
-    public function maltystShowSettings($post)
+    /**
+     * Displays the Maltyst settings page
+     */
+    public function maltystShowSettings(): void
     {
-        $tpl = 'settings';
+        $template = 'settings';
 
         $data = [
-            'prefix'   => PREFIX,
-            //'formType' => $tpl,
+            'prefix' => PREFIX, // Pass any necessary data to the template
         ];
 
-        echo $this->render($tpl, $data);
+        echo $this->render($template, $data);
     }
 }
