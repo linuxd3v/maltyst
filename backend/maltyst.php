@@ -24,6 +24,7 @@ define('MALTYST_VERSION', '0.1.3');
 define('MALTYST_PLUGIN_DIR', \plugin_dir_path(__FILE__));
 define('MALTYST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MALTYST_FETCH_URL', admin_url('admin-fetch.php', is_ssl() ? 'https' : 'http'));
+define('PREFIX', 'maltyst');
 
 // ============================================================================
 // Autoload Dependencies
