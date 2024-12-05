@@ -1,7 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php 
+
+// @todo - fix this class
+namespace Maltyst;
 
 use \Mautic\Auth\ApiAuth;
 use \Mautic\MauticApi;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 class MauticAccess
 {

@@ -1,5 +1,11 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
 
+// @todo - fix this class
+namespace Maltyst;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 class ViewController
 {
     private $htmlDir;
