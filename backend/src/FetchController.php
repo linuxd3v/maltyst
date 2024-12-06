@@ -171,13 +171,13 @@ class FetchController
 
         //5. DNC - there are multiple (or at least 2) DNC channels - email && sms.
         //Here we only care about email scenario.
-        $dncEmail = false;
-        foreach($dnc as $dncEntry) {
-            if ($dncEntry['channel'] === 'email') {
-                $dncEmail = true;
-                break;
-            }
-        }
+        // $dncEmail = false;
+        // foreach($dnc as $dncEntry) {
+        //     if ($dncEntry['channel'] === 'email') {
+        //         $dncEmail = true;
+        //         break;
+        //     }
+        // }
 
         //6. Preparing response
         //6 a. All preference center segments 
