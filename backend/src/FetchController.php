@@ -1,16 +1,24 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php 
+
+// @todo - fix this class
+namespace Maltyst;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Fgribreau\MailChecker;
 
 class FetchController
 {
 
-    private $db;
-    private $mauticAccess;
+    private Database $db;
+    private MauticAccess $mauticAccess;
 
-    private $utils;
-    private $settingsUtils;
+    private Utils $utils;
+    private SettingsUtils $settingsUtils;
 
-    public function __construct($db, $utils, $mauticAccess, $settingsUtils)
+    public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {
         $this->db = $db;
         $this->mauticAccess = $mauticAccess;
@@ -42,7 +50,6 @@ class FetchController
         $contact = $this->mauticAccess->getEmailRecordByMaltystUniqueId($maltystUqId);
         $contactId = $contact['id'];
         $email = isset($contact['fields']['core']['email']['value']) ? $contact['fields']['core']['email']['value'] : null;
-        $dnc   = array_values($contact['doNotContact']); 
         if (is_null($email)) {
             throw new \Exception('Unrecognized response - cannot find email field');
         }
