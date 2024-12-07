@@ -58,7 +58,7 @@ class FetchController
         //2. Pull user segments
         list($apiStatus1, $apiResult1) = $this->mauticAccess->getUserSegments($contactId);
         if (!$apiStatus1) {
-            $defaultResponse['error'] = "Unable to retrieve subscription information. Please try again later.";
+            $defaultResponse['error'] = "Unable to retrieve subscription information.";
             wp_send_json_error($defaultResponse, 500);
         }
         $userSegments = $apiResult1;
@@ -145,7 +145,7 @@ class FetchController
         //2. Pull user segments
         list($apiStatus1, $apiResult1) = $this->mauticAccess->getUserSegments($contactId);
         if (!$apiStatus1) {
-            $defaultResponse['error'] = "Unable to retrieve subscription information. Please try again later.";
+            $defaultResponse['error'] = "Unable to retrieve subscription information.";
             wp_send_json_error($defaultResponse, 500);
         }
         $userSegments = $apiResult1;
@@ -281,7 +281,7 @@ class FetchController
         }
 
 
-        $defaultResponse['message'] = "Thank you. Please check your email and confirm enrollment.";
+        $defaultResponse['message'] = "Thank you. Please check your email to confirm email delivery.";
         wp_send_json($defaultResponse, 200);
     }
 
@@ -312,14 +312,14 @@ class FetchController
 
         //Token is empty - instruct to resignup.
         if (empty($token)) {
-            $defaultResponse['error'] = 'Invalid signup token, please try signup form again.';
+            $defaultResponse['error'] = 'Invalid signup token, try signup form again.';
             wp_send_json_error($defaultResponse, 400);
         }
 
         //Processing token && generating an encrypted hash
         $splitToken =  $this->utils->processPublicToken($token);
         if (is_null($splitToken)) {
-            $defaultResponse['error'] = 'Invalid email confirmation token, please try signup form again';
+            $defaultResponse['error'] = 'Invalid email confirmation token.';
             wp_send_json_error($defaultResponse, 400);
         }
         $emailConfirmationTokenHash = hash($splitToken[1], $splitToken[0]);
@@ -327,7 +327,7 @@ class FetchController
         //Checking if records exists in database
         $tokenRecord = $this->db->getConfirmationTokenRecord($emailConfirmationTokenHash);
         if (is_null($tokenRecord)) {
-            $defaultResponse['error'] = 'Confirmation token not found, please try signup form again';
+            $defaultResponse['error'] = 'Email confirmation token not found.';
             wp_send_json_error($defaultResponse, 400);
         }
         $tokenId = $tokenRecord['id'];
@@ -335,7 +335,7 @@ class FetchController
 
         $optinRecord = $this->db->getEmailOptinRecordById($emailId);
         if (is_null($optinRecord)) {
-            $defaultResponse['error'] = 'Confirmation data is invalid, please try signup form again';
+            $defaultResponse['error'] = 'Email Confirmation data is invalid.';
             wp_send_json_error($defaultResponse, 400);
         }
         $email = $optinRecord['email'];
