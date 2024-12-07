@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+document.addEventListener('DOMContentLoaded', () => {
 
     //Make sure global plugin object exists.
     window.maltyst = window.maltyst || {};
@@ -325,4 +325,4 @@ jQuery(document).ready(function($) {
 
 
 
-} );
+});
