@@ -48,10 +48,10 @@ if (!file_exists(MALTYST_PLUGIN_DIR . 'vendor/autoload.php')) {
 }
 require_once MALTYST_PLUGIN_DIR . 'vendor/autoload.php';
 
-// Include core files
-foreach (['Utils', 'SettingsUtils', 'AdminMessage', 'ViewController', 'FetchController', 'SettingsController', 'Database', 'MauticAccess'] as $class) {
-    require_once MALTYST_PLUGIN_DIR . "src/{$class}.php";
-}
+// // Include core files
+// foreach (['Utils', 'SettingsUtils', 'AdminMessage', 'ViewController', 'FetchController', 'SettingsController', 'Database', 'MauticAccess'] as $class) {
+//     require_once MALTYST_PLUGIN_DIR . "src/{$class}.php";
+// }
 
 // ============================================================================
 // Main Plugin Class
@@ -92,17 +92,47 @@ final class Plugin
 
     private function registerHooks()
     {
-        // Register FETCH handlers
-        add_action('wp_fetch_nopriv_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
-        add_action('wp_fetch_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
+        // ============================================================================
+        // Registering Fetch handlers
+        // ============================================================================        
+        
+        // yes the "wp_ajax_" prefix is mandatory in wordpress, cannot be "wp_fetch_" 
+        add_action('wp_ajax_nopriv_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
+        add_action('wp_ajax_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
 
-        // Enqueue assets
+        add_action( 'wp_ajax_nopriv_maltystFetchGetSubscriptions', [$this->fetchController, 'maltystFetchGetSubscriptions'] );
+        add_action( 'wp_ajax_maltystFetchGetSubscriptions', [$this->fetchController, 'maltystFetchGetSubscriptions'] );
+    
+        add_action( 'wp_ajax_nopriv_maltystUpdateSubscriptions', [$$this->fetchController, 'maltystUpdateSubscriptions'] );
+        add_action( 'wp_ajax_maltystUpdateSubscriptions', [$this->fetchController, 'maltystUpdateSubscriptions'] );
+    
+        add_action( 'wp_ajax_nopriv_maltystFetchPostOptinConfirmation', [$this->fetchController, 'maltystFetchPostOptinConfirmation'] );
+        add_action( 'wp_ajax_maltystFetchPostOptinConfirmation', [$this->fetchController, 'maltystFetchPostOptinConfirmation'] );
+        
+
+        // ============================================================================
+        // Registering Assets
+        // ============================================================================
         add_action('wp_enqueue_scripts', [$this, 'enqueueAssets']);
 
-        // Register settings
+
+        // ============================================================================
+        // Registering New post publish notification
+        // ============================================================================
+        if ($this->settingsUtils->getSettingsValue('maltystPostPublishNotify') == 1) {
+            add_action( 'transition_post_status', [$this->viewController, 'notifyOfNewPost'], 10, 3 );
+        }
+
+
+        // ============================================================================
+        // Enable settings area
+        // ============================================================================
         add_action('admin_menu', [$this->settingsController, 'maltystRegisterSettings']);
 
+
+        // ============================================================================
         // CRON jobs
+        // ============================================================================
         add_action('maltyst_cron_hook', [$this->database, 'cleanupExpired']);
         if (!wp_next_scheduled('maltyst_cron_hook')) {
             wp_schedule_event(time(), 'daily', 'maltyst_cron_hook');
@@ -115,10 +145,13 @@ final class Plugin
 
     public function enqueueAssets()
     {
+        // @fixme - load assets from a manifest
+
         wp_enqueue_style('maltyst', MALTYST_PLUGIN_URL . 'dist/css/maltyst.min.css', [], MALTYST_VERSION);
         wp_enqueue_script('maltyst', MALTYST_PLUGIN_URL . 'dist/js/maltyst.min.js', ['jquery'], MALTYST_VERSION, true);
         wp_localize_script('maltyst', 'maltyst_data', [
             'fetch_url' => MALTYST_FETCH_URL,
+            'prefix'   => PREFIX,
             'nonce' => wp_create_nonce('fetch-nonce'),
         ]);
     }
