@@ -147,20 +147,23 @@ class Database
 
         $schemas = [
             "CREATE TABLE IF NOT EXISTS {$this->tableOptins} (
-                id BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                email VARCHAR(255) NOT NULL,
+                id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                email VARCHAR(300) NOT NULL, -- Shorter length for better index efficiency
                 created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (id),
                 UNIQUE KEY email (email)
             ) $charsetCollate;",
+    
             "CREATE TABLE IF NOT EXISTS {$this->tableConfTokens} (
-                id BIGINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                fk_optins_id BIGINT UNSIGNED NOT NULL,
+                id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                fk_optins_id INT(10) UNSIGNED NOT NULL,
                 hashed_token VARCHAR(255) NOT NULL,
-                hash_algo VARCHAR(20) NOT NULL,
+                hash_algo VARCHAR(50) NOT NULL, -- Slightly larger to support newer algorithms
                 created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (id),
-                UNIQUE KEY hashed_token (hashed_token)
+                UNIQUE KEY hashed_token (hashed_token),
+                KEY fk_optins_id (fk_optins_id), -- Index for foreign key
+                FOREIGN KEY (fk_optins_id) REFERENCES $tableOptins(id) ON DELETE CASCADE
             ) $charsetCollate;"
         ];
 
