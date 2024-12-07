@@ -1,169 +1,131 @@
 import { isQueryParameterPresent, getMaltystContactUqid } from './utils.mjs';
 
-//=========================================================================
-// 1. Preference center
-//=========================================================================
-var pcContainer         = $('.maltyst-preference-center');
-var pcContainerForm     = pcContainer.find('form');
-var pcContainerSpinner  = pcContainerForm.find('.maltystloader');
-var pcContainerResponse = pcContainerForm.find('.maltyst_result_msg');
+const pcContainer = document.querySelector('.maltyst-preference-center');
+const pcContainerForm = pcContainer?.querySelector('form');
+const pcContainerSpinner = pcContainerForm?.querySelector('.maltystloader');
+const pcContainerResponse = pcContainerForm?.querySelector('.maltyst_result_msg');
 
-
-var pullAccountInfo = function() {
-
-    //Marking as in progress - so we dont double pull
-    if (window.maltyst.inProgressPcPulling) {
-        return;
+// Utility to update DOM classes
+const toggleClass = (element, className, add) => {
+    if (element) {
+        element.classList[add ? 'add' : 'remove'](className);
     }
+};
+
+// Utility for resetting state
+const resetState = () => {
+    toggleClass(pcContainerSpinner, 'maltysthide', false);
+    toggleClass(pcContainerResponse, 'success', false);
+    toggleClass(pcContainerResponse, 'error', false);
+    toggleClass(pcContainerResponse, 'maltysthide', true);
+    pcContainerResponse.textContent = '';
+};
+
+// Pull account information
+const pullAccountInfo = async () => {
+    if (window.maltyst.inProgressPcPulling) return;
     window.maltyst.inProgressPcPulling = true;
 
-    //Reset state
-    pcContainerSpinner.removeClass('maltysthide');
-    pcContainerResponse.removeClass('success');
-    pcContainerResponse.removeClass('error');
-    pcContainerResponse.addClass('maltysthide').text('');
+    resetState();
 
-    $.ajax({
-        method: 'GET',
-        url: maltyst_data.ajax_url,
-        data: {
-            'action': 'maltystFetchGetSubscriptions',
-            'maltystContactUqid': getMaltystContactUqid(),
-            'security': maltyst_data.nonce
-        }
-    }).done (function(ajaxResponse, status, xhr) {
+    try {
+        const response = await fetch(`${maltyst_data.ajax_url}?action=maltystFetchGetSubscriptions&maltystContactUqid=${getMaltystContactUqid()}&security=${maltyst_data.nonce}`);
+        if (!response.ok) throw new Error('Failed to fetch account info');
 
-        //Mark request as done
-        pcContainerSpinner.addClass('maltysthide');
-        window.maltyst.inProgressPcPulling = false;
+        const data = await response.json();
 
-        //Render segment names
-        for (var i = 0; i < ajaxResponse.pcSegments.length; i++) {
-            var pcSegment = ajaxResponse.pcSegments[i];
-            var segmentHtml = pcContainer.find('.maltysttemplates').find('.maltyst-segment-li').clone();
+        // Render segment names
+        const segmentsContainer = pcContainer.querySelector('.maltyst-segments');
+        const template = pcContainer.querySelector('.maltysttemplates .maltyst-segment-li');
+        segmentsContainer.innerHTML = '';
 
-            //Populating name, description and value
-            segmentHtml.find('.sname').html(pcSegment.name);
-            segmentHtml.find('.sdescription').html(pcSegment.description);
-            segmentHtml.find('input:checkbox').val(pcSegment.alias);
+        data.pcSegments.forEach(segment => {
+            const segmentHtml = template.cloneNode(true);
+            segmentHtml.querySelector('.sname').textContent = segment.name;
+            segmentHtml.querySelector('.sdescription').textContent = segment.description;
+            const checkbox = segmentHtml.querySelector('input[type="checkbox"]');
+            checkbox.value = segment.alias;
+            checkbox.checked = data.userAliases.includes(segment.alias);
+            segmentsContainer.appendChild(segmentHtml);
+        });
 
-            //Only checking the checkbox if it's in a list of segments user is in
-            if ($.inArray(pcSegment.alias, ajaxResponse.userAliases) !== -1) {
-                segmentHtml.find('input:checkbox').prop('checked', true);
-            }
+        // Show "Save" button and segments
+        toggleClass(pcContainerForm.querySelector('[name="maltyst_submit_btn"]'), 'maltysthide', false);
+        toggleClass(pcContainerForm.querySelector('[name="maltyst_refresh_btn"]'), 'maltysthide', true);
+        toggleClass(pcContainer.querySelector('.maltyst-segments-all'), 'maltysthide', false);
 
-            pcContainer.find('.maltyst-segments').append(segmentHtml);
-        }
-
-        //All rendered - show 'Save' button
-        pcContainerForm.find('[name="maltyst_submit_btn"]').removeClass('maltysthide');
-        pcContainerForm.find('[name="maltyst_refresh_btn"]').addClass('maltysthide');
-        pcContainerForm.find('.maltyst-segments-all').removeClass('maltysthide');
-
-        //If unsubscribe varaible is present - let's automatically trigger unsubscribe
+        // Automatically trigger unsubscribe if needed
         if (isQueryParameterPresent('unsubscribe-from-all')) {
-            console.log('present');
-            $('.maltyst-unsubscribe-all').trigger('click');
+            pcContainer.querySelector('.maltyst-unsubscribe-all').click();
             updateAccountInfo();
         }
-
-    } ).fail( function( response, status, error ) {
-
-        pcContainerResponse.addClass('error').removeClass('maltysthide');
-            
-        var ajaxResponse = $.parseJSON(response.responseText);
-        if (ajaxResponse.data.error) {
-            pcContainerResponse.text(ajaxResponse.data.error);
-        }
-
-
-        //Something went wrong - only show 'Refresh' button
-        pcContainerForm.find('[name="maltyst_refresh_btn"]').removeClass('maltysthide');
-
-        //Mark request as done
-        pcContainerSpinner.addClass('maltysthide');
+    } catch (error) {
+        console.error(error);
+        toggleClass(pcContainerResponse, 'error', true);
+        pcContainerResponse.textContent = 'Error fetching account info.';
+        toggleClass(pcContainerForm.querySelector('[name="maltyst_refresh_btn"]'), 'maltysthide', false);
+    } finally {
+        toggleClass(pcContainerSpinner, 'maltysthide', true);
         window.maltyst.inProgressPcPulling = false;
-    });
+    }
 };
 
-
-
-var updateAccountInfo = function() {
-    //Marking as in progress - so we dont double submit
-    if (window.maltyst.inProgressPcSubmission) {
-        return;
-    }
+// Update account info
+const updateAccountInfo = async () => {
+    if (window.maltyst.inProgressPcSubmission) return;
     window.maltyst.inProgressPcSubmission = true;
 
-    console.log('pcContainerSpinner', pcContainerSpinner);
-    //Reset an error
-    pcContainerSpinner.removeClass('maltysthide');
-    pcContainerResponse.removeClass('success');
-    pcContainerResponse.removeClass('error');
-    pcContainerResponse.addClass('maltysthide').text('');
+    resetState();
 
-    //Getting values of all checked checkboxes
-    var checkedSnames = pcContainerForm.find('input[type=checkbox]:checked').map(function(){
-        return this.value;
-    }).get();
+    const checkedSnames = Array.from(pcContainerForm.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
 
-    $.ajax({
-        method: 'POST',
-        url: maltyst_data.ajax_url,
-        data: {
-            'action':   'maltystUpdateSubscriptions',
-            'snames':    checkedSnames,
-            'maltystContactUqid': getMaltystContactUqid(),
-            'security':  maltyst_data.nonce
-        }
-    }).done (function(ajaxResponse, status, xhr) {
+    try {
+        const response = await fetch(maltyst_data.ajax_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'maltystUpdateSubscriptions',
+                snames: checkedSnames,
+                maltystContactUqid: getMaltystContactUqid(),
+                security: maltyst_data.nonce,
+            }),
+        });
 
-        pcContainerResponse.addClass('success').removeClass('maltysthide');
-        pcContainerResponse.text(ajaxResponse.message);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data?.message || 'Failed to update account info');
 
-    } ).fail( function( response, status, error ) {
-        pcContainerResponse.addClass('error').removeClass('maltysthide');
-        
-        var ajaxResponse = $.parseJSON(response.responseText);
-        if (ajaxResponse.data.error) {
-            pcContainerResponse.text(ajaxResponse.data.error);
-        }
-        
-    }).always(function(){
-        pcContainerSpinner.addClass('maltysthide');
+        toggleClass(pcContainerResponse, 'success', true);
+        pcContainerResponse.textContent = data.message;
+    } catch (error) {
+        console.error(error);
+        toggleClass(pcContainerResponse, 'error', true);
+        pcContainerResponse.textContent = error.message || 'Error updating account info.';
+    } finally {
+        toggleClass(pcContainerSpinner, 'maltysthide', true);
         window.maltyst.inProgressPcSubmission = false;
-    });
+    }
 };
 
-
-//Preference center initialization
+// Initialize preference center
 export function initPreferenceCenter() {
-    if (pcContainer.length) {
-    
-        //Pull account information to construct unsubscribe form
+    if (!pcContainer) return;
+
+    pullAccountInfo();
+
+    pcContainer.querySelector('[name="maltyst_refresh_btn"]').addEventListener('click', (e) => {
+        e.preventDefault();
         pullAccountInfo();
-    
-        pcContainer.find('[name="maltyst_refresh_btn"]').on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-    
-            pullAccountInfo();
+    });
+
+    pcContainerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        updateAccountInfo();
+    });
+
+    pcContainer.querySelector('.maltyst-unsubscribe-all').addEventListener('click', (e) => {
+        e.preventDefault();
+        pcContainerForm.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            input.checked = false;
         });
-    
-        pcContainer.find('form').on('submit', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-    
-            updateAccountInfo()
-        });
-    
-    
-        //Unsubscribe all click
-        $('.maltyst-unsubscribe-all').on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-    
-            pcContainer.find('form').find('input:checkbox').prop('checked', false);
-        });
-    };
+    });
 }
