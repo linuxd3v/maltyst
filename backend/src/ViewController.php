@@ -3,22 +3,26 @@
 // @todo - fix this class
 namespace Maltyst;
 
+use League\Plates\Engine;
+use Mustache_Engine;
+use Mustache_Loader_FilesystemLoader;
+
 if (!defined('ABSPATH')) {
     exit;
 }
 class ViewController
 {
-    private $htmlDir;
-    private $platesEngine;
-    private $mustacheEngine;
+    private string $htmlDir;
+    private Engine $platesEngine;
+    private Mustache_Engine $mustacheEngine;
 
-    private $db;
-    private $mauticAccess;
+    private Database $db;
+    private MauticAccess $mauticAccess;
 
-    private $utils;
-    private $settingsUtils;
+    private Utils $utils;
+    private SettingsUtils $settingsUtils;
 
-    public function __construct($db, $utils, $mauticAccess, $settingsUtils)
+    public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {   
         //HTML PHP rendering for views
         $this->htmlDir  = __DIR__ . '/../html-views';
@@ -26,8 +30,8 @@ class ViewController
 
         //HTML MUSTACHE rendering for emails 
         $mOptions =  ['extension' => '.html'];
-        $this->mustacheEngine = new \Mustache_Engine(array(
-            'loader' => new \Mustache_Loader_FilesystemLoader(__DIR__ . '/../dist/html', $mOptions),
+        $this->mustacheEngine = new Mustache_Engine(array(
+            'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/../dist/html', $mOptions),
         ));
 
 
@@ -38,7 +42,7 @@ class ViewController
         $this->settingsUtils = $settingsUtils;
     }
 
-    private function render($tpl, $data=[]) 
+    private function render($tpl, $data=[]): string
     {
         ob_start();
         $html = $this->platesEngine->render($tpl, $data);
@@ -48,7 +52,7 @@ class ViewController
 
 
 
-    public function renderConfirmation($attr, $content, $tag)
+    public function renderConfirmation($attr, $content, $tag): string
     {
         $tpl = 'confirmation';
 
@@ -60,7 +64,7 @@ class ViewController
         return $this->render($tpl);
     }
 
-    public function renderPreferenceCenter($attr, $content, $tag)
+    public function renderPreferenceCenter($attr, $content, $tag): string
     {
         $tpl = 'preference-center';
 
@@ -73,7 +77,7 @@ class ViewController
     }
     
 
-    public function renderOptinForm($attr, $content, $tag)
+    public function renderOptinForm($attr, $content, $tag): string
     {
         $tpl = 'optin';
 
@@ -86,7 +90,7 @@ class ViewController
     }
 
 
-    public function utilGetPostEmailData($post)
+    public function utilGetPostEmailData($post): array
     {
 
         // Post info
@@ -234,7 +238,7 @@ class ViewController
     //This is not currently being used.
     //I think better approch would be to pull rendered email from mautic and display that.
     //Some app-caching would be preferred in that case, we should also include maltyst unique id to render unique links.
-    public function emailPostBrowserView()
+    public function emailPostBrowserView(): string
     {
 
         $postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
@@ -251,7 +255,7 @@ class ViewController
     
 
 
-    public function notifyOfNewPost($new_status, $old_status, $post)
+    public function notifyOfNewPost($new_status, $old_status, $post): void
     {
         //Status not changing to published? - nothing to do.
         if ('publish' !== $new_status ) {
