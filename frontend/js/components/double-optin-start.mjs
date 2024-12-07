@@ -1,60 +1,69 @@
 //=========================================================================
-// 2. Email optin form submission handling
+// 2. Email opt-in form submission handling
 //=========================================================================
-//Elements
-var optinForm             = $('.maltyst-optin-frm');
-var optinFormSpinner      = optinForm.find('.maltystloader');
-var optinFormResponseArea = optinForm.find('.maltyst_result_msg');
 
-var submitOptin = function() {
-    //Marking as in progress - so we dont double submit
-    if (window.maltyst.inProgressOptin) {
+// Elements
+const optinForm = document.querySelector('.maltyst-optin-frm');
+const optinFormSpinner = optinForm?.querySelector('.maltystloader');
+const optinFormResponseArea = optinForm?.querySelector('.maltyst_result_msg');
+
+const submitOptin = async () => {
+    // Prevent double submission
+    if (window.maltyst?.inProgressOptin) {
         return;
     }
+    window.maltyst = window.maltyst || {};
     window.maltyst.inProgressOptin = true;
 
-    //Reset an error
-    optinFormSpinner.removeClass('maltysthide');
-    optinFormResponseArea.removeClass('success');
-    optinFormResponseArea.removeClass('error');
-    optinFormResponseArea.addClass('maltysthide').text('');
+    // Reset the form UI
+    optinFormSpinner?.classList.remove('maltysthide');
+    optinFormResponseArea?.classList.remove('success', 'error', 'maltysthide');
+    if (optinFormResponseArea) optinFormResponseArea.textContent = '';
 
-    // Submit an optin
-    $.post(
-        maltyst_data.ajax_url,
-        {
-            'action':  'maltystAjaxAcceptOptin',
-            'email':    optinForm.find('[name=' + maltyst_data.prefix + '_email]').val(),
-            'security': maltyst_data.nonce
+    try {
+        // Collect form data
+        const emailField = optinForm.querySelector(`[name=${maltyst_data.prefix}_email]`);
+        const email = emailField?.value;
+        const response = await fetch(maltyst_data.ajax_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'maltystAjaxAcceptOptin',
+                email: email,
+                security: maltyst_data.nonce,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result?.data?.error || 'An error occurred.');
         }
-    ).done (function(ajaxResponse, status, xhr) {
-        optinFormResponseArea.addClass('success');
-        optinFormResponseArea.removeClass('maltysthide');
-        optinFormResponseArea.text(ajaxResponse.message);
 
-    } ).fail( function( response, status, error ) {
+        // Success
+        optinFormResponseArea?.classList.add('success');
+        optinFormResponseArea?.classList.remove('maltysthide');
+        if (optinFormResponseArea) optinFormResponseArea.textContent = result.message;
 
-        optinFormResponseArea.addClass('error');
-        optinFormResponseArea.removeClass('maltysthide');
-
-        var ajaxResponse = $.parseJSON(response.responseText);
-        if (ajaxResponse.data.error) {
-            optinFormResponseArea.text(ajaxResponse.data.error);
-        }
-        
-    }).always(function(){
-        optinFormSpinner.addClass('maltysthide');
+    } catch (error) {
+        // Error handling
+        optinFormResponseArea?.classList.add('error');
+        optinFormResponseArea?.classList.remove('maltysthide');
+        if (optinFormResponseArea) optinFormResponseArea.textContent = error.message;
+    } finally {
+        // Reset spinner and allow submissions again
+        optinFormSpinner?.classList.add('maltysthide');
         window.maltyst.inProgressOptin = false;
-    });
+    }
 };
 
 export function initDoubleOptinStart() {
-    if (optinForm.length) {
-        optinForm.on('submit', function(e) {
+    if (optinForm) {
+        optinForm.addEventListener('submit', (e) => {
             e.preventDefault();
             e.stopPropagation();
-        
+
             submitOptin();
-        });       
+        });
     }
 }
