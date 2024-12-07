@@ -1,42 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    //Make sure global plugin object exists.
-    window.maltyst = window.maltyst || {};
+    // Ensure global plugin object exists.
+    window.maltyst = window.maltyst ?? {};
 
-    //Get query param by name
-    var getQueryVariable = function(variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split('&');
-        for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split('=');
-            if (decodeURIComponent(pair[0]) == variable) {
-                return decodeURIComponent(pair[1]);
-            }
-        }
-    
-        return null;
+    // Utility to get query parameter value by name.
+    const getQueryParameter = (name) => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
     };
 
-    var isQueryVarPresent = function(field) {
-        var url = window.location.href;
-
-        if (url.indexOf('?' + field + '=') != -1) {
-            return true;
-        } else if (url.indexOf('&' + field + '=') != -1) {
-            return true;
-        }
-
-        return false
+    // Check if a specific query parameter exists.
+    const isQueryParameterPresent = (name) => {
+        const params = new URLSearchParams(window.location.search);
+        return params.has(name);
     };
-    
-    var getMaltystContactUqid = function() {
 
-        if (window.maltyst.maltystContactUqid === undefined) {
-            window.maltyst.maltystContactUqid = getQueryVariable('maltyst_contact_uqid');
+    // Retrieve or cache the maltyst contact unique identifier.
+    const getMaltystContactUqid = () => {
+        if (!window.maltyst.maltystContactUqid) {
+            window.maltyst.maltystContactUqid = getQueryParameter('maltyst_contact_uqid');
         }
-
         return window.maltyst.maltystContactUqid;
     };
+
 
 
 
@@ -106,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pcContainerForm.find('.maltyst-segments-all').removeClass('maltysthide');
 
             //If unsubscribe varaible is present - let's automatically trigger unsubscribe
-            if (isQueryVarPresent('unsubscribe-from-all')) {
+            if (isQueryParameterPresent('unsubscribe-from-all')) {
                 console.log('present');
                 $('.maltyst-unsubscribe-all').trigger('click');
                 updateAccountInfo();
@@ -297,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             url: maltyst_data.ajax_url,
             data: {
                 'action':                       'maltystFetchPostOptinConfirmation',
-                'maltyst_optin_confirmation_token': getQueryVariable('maltyst_optin_confirmation_token'),
+                'maltyst_optin_confirmation_token': getQueryParameter('maltyst_optin_confirmation_token'),
                 'security':                      maltyst_data.nonce
             }
         }).done (function(ajaxResponse, status, xhr) {
