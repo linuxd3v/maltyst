@@ -30,12 +30,12 @@ class FetchController
     //===========================================================================
     // Updating subscriptions for user
     //===========================================================================
-    public function maltystFetchPostSubscriptions ()
+    public function maltystFetchPostSubscriptions (): void
     {
         // Params
-        $nonce  = isset($_POST['security']) ? $_POST['security'] : null;
-        $snames = isset($_POST['snames']) && is_array($_POST['snames']) ? $_POST['snames'] : [];
-        $maltystUqId = isset($_POST['maltystContactUqid']) && is_string($_POST['maltystContactUqid']) ? $_POST['maltystContactUqid'] : null;
+        $nonce = $_POST['security'] ?? null;
+        $snames = is_array($_POST['snames'] ?? null) ? $_POST['snames'] : [];
+        $maltystUqId = is_string($_POST['maltystContactUqid'] ?? null) ? $_POST['maltystContactUqid'] : null;
 
         $defaultResponse = [];
     
@@ -197,7 +197,7 @@ class FetchController
     //===========================================================================
     // Accepting user optin - this will dispatch double-optin email
     //===========================================================================
-    public function maltystFetchAcceptOptin ()
+    public function maltystFetchAcceptOptin (): void
     {
         // Check for nonce security
         $nonce = $_POST['security'];
@@ -293,7 +293,7 @@ class FetchController
     //===========================================================================
     // Processing double optin confirmation
     //===========================================================================
-    public function maltystFetchPostOptinConfirmation()
+    public function maltystFetchPostOptinConfirmation(): void
     {
 
         // Params
