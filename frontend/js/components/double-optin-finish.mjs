@@ -3,42 +3,64 @@ import { getQueryParameter } from './utils.mjs';
 //=========================================================================
 // 3. Optin confirmation form
 //=========================================================================
-var maltystConfirmation         = $('.maltyst-confirmation-cnt');
-var maltystConfirmationSpinner  = maltystConfirmation.find('.maltystloader');
-var maltystConfirmationResponse = maltystConfirmation.find('.maltyst_result_msg');
+import { getQueryParameter } from './utils.mjs';
 
-var submitOptinConfirmation = function() {
-    maltystConfirmationSpinner.removeClass('maltysthide');
+//=========================================================================
+// 3. Opt-in Confirmation Form
+//=========================================================================
 
-    $.ajax({
-        method: 'POST',
-        url: maltyst_data.ajax_url,
-        data: {
-            'action':                       'maltystFetchPostOptinConfirmation',
-            'maltyst_optin_confirmation_token': getQueryParameter('maltyst_optin_confirmation_token'),
-            'security':                      maltyst_data.nonce
+// Cache elements
+const maltystConfirmation = document.querySelector('.maltyst-confirmation-cnt');
+const maltystConfirmationSpinner = maltystConfirmation?.querySelector('.maltystloader');
+const maltystConfirmationResponse = maltystConfirmation?.querySelector('.maltyst_result_msg');
+
+// Submit opt-in confirmation using modern fetch API
+const submitOptinConfirmation = async () => {
+    if (!maltystConfirmationSpinner || !maltystConfirmationResponse) return;
+
+    // Show the spinner
+    maltystConfirmationSpinner.classList.remove('maltysthide');
+
+    try {
+        // Send POST request
+        const response = await fetch(maltyst_data.ajax_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'maltystFetchPostOptinConfirmation',
+                maltyst_optin_confirmation_token: getQueryParameter('maltyst_optin_confirmation_token'),
+                security: maltyst_data.nonce,
+            }),
+        });
+
+        // Parse the JSON response
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData?.data?.error || 'An error occurred');
         }
-    }).done (function(ajaxResponse, status, xhr) {
 
-        maltystConfirmationResponse.addClass('success').removeClass('maltysthide');
-        maltystConfirmationResponse.text(ajaxResponse.message);
+        const responseData = await response.json();
 
-    } ).fail( function( response, status, error ) {
-        maltystConfirmationResponse.addClass('error').removeClass('maltysthide');
-        
-        var ajaxResponse = $.parseJSON(response.responseText);
-        if (ajaxResponse.data.error) {
-            maltystConfirmationResponse.text(ajaxResponse.data.error);
-        }
-        
-    }).always(function(){
-        maltystConfirmationSpinner.addClass('maltysthide');
-    });
+        // Show success message
+        maltystConfirmationResponse.classList.add('success');
+        maltystConfirmationResponse.classList.remove('maltysthide');
+        maltystConfirmationResponse.textContent = responseData.message;
+    } catch (error) {
+        // Show error message
+        maltystConfirmationResponse.classList.add('error');
+        maltystConfirmationResponse.classList.remove('maltysthide');
+        maltystConfirmationResponse.textContent = error.message;
+    } finally {
+        // Hide the spinner
+        maltystConfirmationSpinner.classList.add('maltysthide');
+    }
 };
 
-
+// Initialize the double opt-in finish process
 export function initDoubleOptinFinish() {
-    if (maltystConfirmation.length) {
+    if (maltystConfirmation) {
         submitOptinConfirmation();
     }
 }
