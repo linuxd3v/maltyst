@@ -72,7 +72,7 @@ jQuery(document).ready(function($) {
             method: 'GET',
             url: maltyst_data.ajax_url,
             data: {
-                'action': 'maltystAjaxGetSubscriptions',
+                'action': 'maltystFetchGetSubscriptions',
                 'maltystContactUqid': getMaltystContactUqid(),
                 'security': maltyst_data.nonce
             }
@@ -156,7 +156,7 @@ jQuery(document).ready(function($) {
             method: 'POST',
             url: maltyst_data.ajax_url,
             data: {
-                'action':   'maltystAjaxPostSubscriptions',
+                'action':   'maltystUpdateSubscriptions',
                 'snames':    checkedSnames,
                 'maltystContactUqid': getMaltystContactUqid(),
                 'security':  maltyst_data.nonce
@@ -296,7 +296,7 @@ jQuery(document).ready(function($) {
             method: 'POST',
             url: maltyst_data.ajax_url,
             data: {
-                'action':                       'maltystAjaxPostOptinConfirmation',
+                'action':                       'maltystFetchPostOptinConfirmation',
                 'maltyst_optin_confirmation_token': getQueryVariable('maltyst_optin_confirmation_token'),
                 'security':                      maltyst_data.nonce
             }

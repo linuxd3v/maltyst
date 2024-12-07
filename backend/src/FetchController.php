@@ -30,7 +30,7 @@ class FetchController
     //===========================================================================
     // Updating subscriptions for user
     //===========================================================================
-    public function maltystFetchPostSubscriptions (): void
+    public function maltystUpdateSubscriptions(): void
     {
         // Params
         $nonce = $_POST['security'] ?? null;
@@ -117,7 +117,7 @@ class FetchController
     //===========================================================================
     // Retrieving subscriptions for a user
     //===========================================================================
-    public function maltystFetchGetSubscriptions ()
+    public function maltystFetchGetSubscriptions(): void
     {
         // Params
         $nonce   = isset($_GET['security']) ? $_GET['security'] : null;
@@ -194,9 +194,7 @@ class FetchController
     }
 
 
-    //===========================================================================
     // Accepting user optin - this will dispatch double-optin email
-    //===========================================================================
     public function maltystFetchAcceptOptin (): void
     {
         // Check for nonce security
