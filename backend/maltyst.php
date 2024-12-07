@@ -27,6 +27,20 @@ define('MALTYST_FETCH_URL', admin_url('admin-fetch.php', is_ssl() ? 'https' : 'h
 define('PREFIX', 'maltyst');
 
 // ============================================================================
+// Utils
+// ============================================================================
+if (!function_exists('mb_trim')) {
+    //Trims a string, considering multibyte characters.
+    function mb_trim(string $string, string $characterMask = '\s', string $encoding = 'UTF-8'): string
+    {
+        $pattern = '/^[' . $characterMask . ']+|[' . $characterMask . ']+$/u';
+        return preg_replace($pattern, '', $string) ?? $string;
+    }
+}
+
+
+
+// ============================================================================
 // Autoload Dependencies
 // ============================================================================
 if (!file_exists(MALTYST_PLUGIN_DIR . 'vendor/autoload.php')) {
