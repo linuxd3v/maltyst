@@ -42,7 +42,7 @@ class ViewController
         $this->settingsUtils = $settingsUtils;
     }
 
-    private function render($tpl, $data=[]): string
+    private function render($tpl, array $data=[]): string
     {
         ob_start();
         $html = $this->platesEngine->render($tpl, $data);
@@ -235,27 +235,27 @@ class ViewController
     }
 
 
-    //This is not currently being used.
-    //I think better approch would be to pull rendered email from mautic and display that.
-    //Some app-caching would be preferred in that case, we should also include maltyst unique id to render unique links.
-    public function emailPostBrowserView(): string
-    {
+    // //This is not currently being used.
+    // //I think better approch would be to pull rendered email from mautic and display that.
+    // //Some app-caching would be preferred in that case, we should also include maltyst unique id to render unique links.
+    // public function emailPostBrowserView(): string
+    // {
 
-        $postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
-        $post = get_post($postId);
+    //     $postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
+    //     $post = get_post($postId);
 
-        $data = $this->utilGetPostEmailData($post);
+    //     $data = $this->utilGetPostEmailData($post);
 
 
-        $tpl = 'email-template-newpost';
+    //     $tpl = 'email-template-newpost';
 
-        return $this->mustacheEngine->render($tpl, $data);
-    }
+    //     return $this->mustacheEngine->render($tpl, $data);
+    // }
 
     
 
 
-    public function notifyOfNewPost($new_status, $old_status, $post): void
+    public function notifyOfNewPost(string $new_status, string $old_status, $post): void
     {
         //Status not changing to published? - nothing to do.
         if ('publish' !== $new_status ) {
