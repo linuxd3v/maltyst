@@ -37,6 +37,8 @@ var submitOptinConfirmation = function() {
 };
 
 
-if (maltystConfirmation.length) {
-    submitOptinConfirmation();
+export function initDoubleOptinFinish() {
+    if (maltystConfirmation.length) {
+        submitOptinConfirmation();
+    }
 }

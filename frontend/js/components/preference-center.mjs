@@ -136,34 +136,34 @@ var updateAccountInfo = function() {
 };
 
 
-
-
 //Preference center initialization
-if (pcContainer.length) {
+export function initPreferenceCenter() {
+    if (pcContainer.length) {
     
-    //Pull account information to construct unsubscribe form
-    pullAccountInfo();
-
-    pcContainer.find('[name="maltyst_refresh_btn"]').on('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
+        //Pull account information to construct unsubscribe form
         pullAccountInfo();
-    });
-
-    pcContainer.find('form').on('submit', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        updateAccountInfo()
-    });
-
-
-    //Unsubscribe all click
-    $('.maltyst-unsubscribe-all').on('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        pcContainer.find('form').find('input:checkbox').prop('checked', false);
-    });
-};
+    
+        pcContainer.find('[name="maltyst_refresh_btn"]').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+    
+            pullAccountInfo();
+        });
+    
+        pcContainer.find('form').on('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+    
+            updateAccountInfo()
+        });
+    
+    
+        //Unsubscribe all click
+        $('.maltyst-unsubscribe-all').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+    
+            pcContainer.find('form').find('input:checkbox').prop('checked', false);
+        });
+    };
+}

@@ -48,9 +48,13 @@ var submitOptin = function() {
     });
 };
 
-optinForm.on('submit', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    submitOptin();
-});
+export function initDoubleOptinStart() {
+    if (optinForm.length) {
+        optinForm.on('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        
+            submitOptin();
+        });       
+    }
+}
