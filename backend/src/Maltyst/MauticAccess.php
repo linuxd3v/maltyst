@@ -4,7 +4,11 @@
 namespace Maltyst;
 
 use \Mautic\Auth\ApiAuth;
+use \Mautic\Auth\BasicAuth;
 use \Mautic\MauticApi;
+use \Mautic\Api\Contacts;
+use \Mautic\Api\Segments;
+use \Mautic\Api\Emails;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,19 +17,21 @@ if (!defined('ABSPATH')) {
 class MauticAccess
 {
 
-    private $settingsUtils; 
-
-    private $mauticApi;
-    private $contactsApi;
-    private $segmentApi;
-    private $emailApi;
-
-
-    private $segmentsPulledFromApi = false;
-    private $preferenceCenterSegments = [];
+    private SettingsUtils $settingsUtils; 
+    private MauticApi $mauticApi;
+    private Contacts $contactsApi;
+    private Segments $segmentApi;
+    private Emails $emailApi;
 
 
-    public function __construct($settingsUtils)
+    private BasicAuth $basicAuth;
+
+
+    private bool $segmentsPulledFromApi = false;
+    private array $preferenceCenterSegments = [];
+
+
+    public function __construct(SettingsUtils $settingsUtils)
     {
 
         $this->settingsUtils = $settingsUtils;
@@ -50,14 +56,14 @@ class MauticAccess
     
             // Initiate Mautic Basic auth
             $initAuth = new ApiAuth();
-            $auth     = $initAuth->newAuth($mauticBasic, 'BasicAuth');
-            $auth->setCurlTimeout(5);
+            $this->basicAuth = $initAuth->newAuth($mauticBasic, 'BasicAuth');
+            $this->basicAuth->setCurlTimeout(5);
             
             // Diferent mautic apis
             $this->mauticApi   = new MauticApi();
-            $this->contactsApi = $this->mauticApi->newApi('contacts', $auth, $apiUrl);
-            $this->segmentApi  = $this->mauticApi->newApi('segments', $auth, $apiUrl);
-            $this->emailApi    = $this->mauticApi->newApi('emails', $auth, $apiUrl);
+            $this->contactsApi = $this->mauticApi->newApi('contacts',  $this->basicAuth, $apiUrl);
+            $this->segmentApi  = $this->mauticApi->newApi('segments',  $this->basicAuth, $apiUrl);
+            $this->emailApi    = $this->mauticApi->newApi('emails',  $this->basicAuth, $apiUrl);
         } else {
             new AdminMessage('Unable to configure mautic api - please provide all required configuration options');
         }
@@ -65,7 +71,7 @@ class MauticAccess
 
     //Let's pull all segments from api and filter to only leave
     //those that we support via config
-    public function getPreferenceCenterSegments()
+    public function getPreferenceCenterSegments(): array
     {
         if (!$this->segmentsPulledFromApi) {
 
@@ -104,7 +110,7 @@ class MauticAccess
     }
 
 
-    public function getUserSegments($contactId)
+    public function getUserSegments(string $contactId): array
     {
 
         //Start and limit numbers are arbitrary, I doubt anyone will hit these limits,
@@ -141,7 +147,7 @@ class MauticAccess
         }
     }
 
-    public function addSubscriberToSegmentsUsingSegmentAliases($contactId, $aliases=[])
+    public function addSubscriberToSegmentsUsingSegmentAliases(string $contactId, array $aliases=[]): array
     {
         $aliases = array_unique($aliases);
 
@@ -184,7 +190,7 @@ class MauticAccess
 
 
 
-    public function removeSubscriberFromSegmentsUsingSegmentAliases($contactId, $aliases=[])
+    public function removeSubscriberFromSegmentsUsingSegmentAliases(string $contactId, array $aliases=[]): array
     {
         $aliases  =array_unique($aliases);
 
@@ -226,7 +232,7 @@ class MauticAccess
     }
 
 
-    public function findEmailIdByName($emailName)
+    public function findEmailIdByName(string $emailName): array
     {
         $emailIdsRef = [];
 
@@ -253,7 +259,7 @@ class MauticAccess
 
 
 
-    public function sendEmailToSubscriberByEmailName($contactId, $emailName, $tokens=[])
+    public function sendEmailToSubscriberByEmailName($contactId, $emailName, $tokens=[]): array
     {
         list($status, $data) = $this->findEmailIdByName($emailName);
         if (!$status) {
@@ -274,7 +280,7 @@ class MauticAccess
 
 
 
-    public function sendPostNotificicationToSegment($emailData)
+    public function sendPostNotificicationToSegment(array $emailData): array
     {
         //Create email
         $createResponse = $this->emailApi->create($emailData);
@@ -299,7 +305,7 @@ class MauticAccess
 
 
 
-    public function createSubscriber($email, $maltystUqId = null)
+    public function createSubscriber(string $email, ?string $maltystUqId = null): array
     {
         //Create a contact
         $data = [
@@ -320,7 +326,7 @@ class MauticAccess
     }
 
 
-    public function doesEmailExist($email)
+    public function doesEmailExist(string $email): bool
     {
         $where = [ [ 'col' => 'email', 'expr' => 'eq', 'val' => $email, ] ];
         $contacts = $this->contactsApi->getList("email:$email", 0, 30, $orderBy='email', $orderByDir='asc', $publishedOnly=false, $minimal=false);
@@ -337,7 +343,7 @@ class MauticAccess
         return false;
     }
 
-    public function getEmailRecordByEmail($email)
+    public function getEmailRecordByEmail(string $email): ?array
     {
         $where = [ [ 'col' => 'email', 'expr' => 'eq', 'val' => $email, ] ];
         $contacts = $this->contactsApi->getList("email:$email", 0, 30, $orderBy='email', $orderByDir='asc', $publishedOnly=false, $minimal=false);
@@ -348,7 +354,7 @@ class MauticAccess
         }
 
         if ($total != 1) {
-            return false;
+            return null;
         }
 
         $contacts = array_values($contacts['contacts']);
@@ -356,7 +362,7 @@ class MauticAccess
         return $contacts[0];
     }
 
-    public function getEmailRecordByMaltystUniqueId($maltystUqId)
+    public function getEmailRecordByMaltystUniqueId(string $maltystUqId): array
     {
         $where = [ [ 'col' => 'maltyst_contact_uqid', 'expr' => 'eq', 'val' => $maltystUqId, ] ];
         $contacts = $this->contactsApi->getList("maltyst_contact_uqid:$maltystUqId", 0, 30, $orderBy='id', $orderByDir='asc', $publishedOnly=false, $minimal=false);
