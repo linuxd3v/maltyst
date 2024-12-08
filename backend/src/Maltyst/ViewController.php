@@ -238,19 +238,17 @@ class ViewController
     // //This is not currently being used.
     // //I think better approch would be to pull rendered email from mautic and display that.
     // //Some app-caching would be preferred in that case, we should also include maltyst unique id to render unique links.
-    // public function emailPostBrowserView(): string
-    // {
+    public function emailPostBrowserView(): string
+    {
+        $postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
+        $post = get_post($postId);
 
-    //     $postId = isset($_GET['post_id']) ? $_GET['post_id'] : null;
-    //     $post = get_post($postId);
+        $data = $this->utilGetPostEmailData($post);
 
-    //     $data = $this->utilGetPostEmailData($post);
+        $tpl = 'email-template-newpost';
 
-
-    //     $tpl = 'email-template-newpost';
-
-    //     return $this->mustacheEngine->render($tpl, $data);
-    // }
+        return $this->mustacheEngine->render($tpl, $data);
+    }
 
     
 

@@ -82,6 +82,7 @@ final class Plugin
         $this->settingsController = new SettingsController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
 
         $this->registerHooks();
+        $this->registerShortcodes();
     }
 
     public static function getInstance(): Plugin
@@ -91,6 +92,24 @@ final class Plugin
         }
         return self::$instance;
     }
+
+    private function registerShortcodes()
+    {
+        // ============================================================================
+        // Registering shortcodes
+        // ============================================================================
+        $forms = [
+            'maltyst_optin_form'         => [$this->viewController, 'renderOptinForm'],
+            'maltyst_preference_center'  => [$this->viewController, 'renderPreferenceCenter'],
+            'maltyst_optin_confirmation' => [$this->viewController, 'renderConfirmation'],
+            'maltyst_post_browser_view'  => [$this->viewController, 'emailPostBrowserView'],
+        ];
+        foreach($forms as $shortcode => $callable) {
+            add_shortcode( $shortcode, $callable );
+        }
+    }
+
+
 
     private function registerHooks()
     {
