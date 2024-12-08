@@ -145,18 +145,6 @@ final class Plugin
         register_deactivation_hook(__FILE__, [$this, 'deactivatePlugin']);
     }
 
-    public function enqueueAssetsBak()
-    {
-        // @fixme - load assets from a manifest
-
-        wp_enqueue_style('maltyst', MALTYST_PLUGIN_URL . 'dist/css/maltyst.min.css', [], MALTYST_VERSION);
-        wp_enqueue_script('maltyst', MALTYST_PLUGIN_URL . 'dist/js/maltyst.min.js', ['jquery'], MALTYST_VERSION, true);
-        wp_localize_script('maltyst', 'maltyst_data', [
-            'fetch_url' => MALTYST_FETCH_URL,
-            'prefix'   => MALTYST_PREFIX,
-            'nonce' => wp_create_nonce('fetch-nonce'),
-        ]);
-    }
     public function enqueueAssets()
     {
         // Read and decode the manifest file
