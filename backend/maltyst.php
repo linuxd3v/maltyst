@@ -25,6 +25,8 @@ define('MALTYST_PLUGIN_DIR', \plugin_dir_path(__FILE__));
 define('MALTYST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MALTYST_FETCH_URL', admin_url('admin-fetch.php', is_ssl() ? 'https' : 'http'));
 define('PREFIX', 'maltyst');
+define('MALTYST_MANIFEST', MALTYST_PLUGIN_DIR . '/.vite/manifest.json');
+
 
 // ============================================================================
 // Utils
@@ -143,7 +145,7 @@ final class Plugin
         register_deactivation_hook(__FILE__, [$this, 'deactivatePlugin']);
     }
 
-    public function enqueueAssets()
+    public function enqueueAssetsBak()
     {
         // @fixme - load assets from a manifest
 
@@ -155,6 +157,56 @@ final class Plugin
             'nonce' => wp_create_nonce('fetch-nonce'),
         ]);
     }
+    public function enqueueAssets()
+    {
+        // Read and decode the manifest file
+        if (file_exists(MALTYST_MANIFEST)) {
+            $manifest = json_decode(file_get_contents(MALTYST_MANIFEST), true);
+        } else {
+            throw new \RuntimeException("Vite manifest file not found at " . MALTYST_MANIFEST);
+        }
+    
+        // Extract asset paths
+        $cssFile = isset($manifest['scss/maltyst.scss']['file'])
+            ? MALTYST_PLUGIN_URL . $manifest['scss/maltyst.scss']['file']
+            : null;
+    
+        $jsFile = isset($manifest['js/maltyst.mjs']['file'])
+            ? MALTYST_PLUGIN_URL . $manifest['js/maltyst.mjs']['file']
+            : null;
+    
+        // Enqueue CSS if available
+        if ($cssFile) {
+            wp_enqueue_style('maltyst', $cssFile, [], MALTYST_VERSION);
+        }
+    
+        // Enqueue JavaScript if available
+        if ($jsFile) {
+            wp_enqueue_script('maltyst', $jsFile, ['jquery'], MALTYST_VERSION, true);
+        }
+    
+
+        // Pass backend data to the JS
+        $maltystData = [
+            'fetch_url' => MALTYST_FETCH_URL,
+            'prefix' => PREFIX,
+            'nonce' => wp_create_nonce('fetch-nonce'),
+        ];
+        wp_add_inline_script(
+            'maltyst',
+            'window.maltystData = ' . json_encode($maltystData) . ';',
+            'before'
+        );
+
+        // // Localize script 
+        // // This is just a hack to inject data into wordpress javascript 
+        // wp_localize_script('maltyst', 'maltyst_data', [
+        //     'fetch_url' => MALTYST_FETCH_URL,
+        //     'prefix'   => PREFIX,
+        //     'nonce' => wp_create_nonce('fetch-nonce'),
+        // ]);
+    }
+    
 
     public function deactivatePlugin()
     {
