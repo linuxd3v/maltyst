@@ -1,6 +1,5 @@
 <?php 
 
-// @todo - fix this class
 namespace Maltyst;
 
 if (!defined('ABSPATH')) {
@@ -228,7 +227,7 @@ class FetchController
         //field: maltyst_contact_uqid on update call?
         $maltystUqId = null;
         $contact = $this->mauticAccess->getEmailRecordByEmail($email);
-        if ($contact !== false) {
+        if ($contact !== null) {
             $maltystUqId = isset($contact['fields']['core']['maltyst_contact_uqid']['value']) ? $contact['fields']['core']['maltyst_contact_uqid']['value'] : null;
         }
 
