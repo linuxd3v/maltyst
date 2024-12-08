@@ -8,6 +8,7 @@ use \Mautic\MauticApi;
 use \Mautic\Api\Contacts;
 use \Mautic\Api\Segments;
 use \Mautic\Api\Emails;
+use Ramsey\Uuid\Uuid;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -303,13 +304,16 @@ class MauticAccess
 
     public function createSubscriber(string $email, ?string $maltystUqId = null): array
     {
+        // Create a uuid v7  - we will use that for unique identifiers in mautic
+        $uuid = Uuid::uuid7();
+
         //Create a contact
         $data = [
             //'firstname'   => 'Jane',
             //'lastname'    => 'Doe',
             //'ipAddress'   => '1.2.3.4',
             'email'              => $email,
-            'maltyst_contact_uqid'   => is_null($maltystUqId) ? uniqid() : $maltystUqId,
+            'maltyst_contact_uqid'   => is_null($maltystUqId) ? $uuid->toString() : $maltystUqId,
             'overwriteWithBlank' => true,
         ];
         $contactApiResponse = $this->contactsApi->create($data);

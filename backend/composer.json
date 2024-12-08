@@ -30,7 +30,8 @@
         "fgribreau/mailchecker": "6.0.*",
         "league/plates": "3.6.*",
         "mautic/api-library": "3.1.*",
-        "mustache/mustache": "v2.14.*"
+        "mustache/mustache": "v2.14.*",
+        "ramsey/uuid": "^4.7"
     },
     "autoload": {
         "psr-4": {
