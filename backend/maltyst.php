@@ -24,7 +24,7 @@ define('MALTYST_VERSION', '0.1.3');
 define('MALTYST_PLUGIN_DIR', \plugin_dir_path(__FILE__));
 define('MALTYST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MALTYST_FETCH_URL', admin_url('admin-fetch.php', is_ssl() ? 'https' : 'http'));
-define('PREFIX', 'maltyst');
+define('MALTYST_PREFIX', 'maltyst');
 define('MALTYST_MANIFEST', MALTYST_PLUGIN_DIR . '/.vite/manifest.json');
 
 
@@ -153,7 +153,7 @@ final class Plugin
         wp_enqueue_script('maltyst', MALTYST_PLUGIN_URL . 'dist/js/maltyst.min.js', ['jquery'], MALTYST_VERSION, true);
         wp_localize_script('maltyst', 'maltyst_data', [
             'fetch_url' => MALTYST_FETCH_URL,
-            'prefix'   => PREFIX,
+            'prefix'   => MALTYST_PREFIX,
             'nonce' => wp_create_nonce('fetch-nonce'),
         ]);
     }
@@ -189,7 +189,7 @@ final class Plugin
         // Pass backend data to the JS
         $maltystData = [
             'fetch_url' => MALTYST_FETCH_URL,
-            'prefix' => PREFIX,
+            'prefix' => MALTYST_PREFIX,
             'nonce' => wp_create_nonce('fetch-nonce'),
         ];
         wp_add_inline_script(
@@ -197,14 +197,6 @@ final class Plugin
             'window.maltystData = ' . json_encode($maltystData) . ';',
             'before'
         );
-
-        // // Localize script 
-        // // This is just a hack to inject data into wordpress javascript 
-        // wp_localize_script('maltyst', 'maltyst_data', [
-        //     'fetch_url' => MALTYST_FETCH_URL,
-        //     'prefix'   => PREFIX,
-        //     'nonce' => wp_create_nonce('fetch-nonce'),
-        // ]);
     }
     
 
