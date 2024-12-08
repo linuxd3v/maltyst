@@ -107,7 +107,7 @@ const updateAccountInfo = async () => {
 };
 
 // Initialize preference center
-export function initPreferenceCenter() {
+export default function initPreferenceCenter() {
     if (!pcContainer) return;
 
     pullAccountInfo();

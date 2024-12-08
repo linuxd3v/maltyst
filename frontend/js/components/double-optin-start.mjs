@@ -57,7 +57,7 @@ const submitOptin = async () => {
     }
 };
 
-export function initDoubleOptinStart() {
+export default function initDoubleOptinStart() {
     if (optinForm) {
         optinForm.addEventListener('submit', (e) => {
             e.preventDefault();

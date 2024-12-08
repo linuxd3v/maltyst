@@ -54,7 +54,7 @@ const submitOptinConfirmation = async () => {
 };
 
 // Initialize the double opt-in finish process
-export function initDoubleOptinFinish() {
+export default function initDoubleOptinFinish() {
     if (maltystConfirmation) {
         submitOptinConfirmation();
     }
