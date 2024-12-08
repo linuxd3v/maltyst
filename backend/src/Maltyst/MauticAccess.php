@@ -1,6 +1,5 @@
 <?php 
 
-// @todo - fix this class
 namespace Maltyst;
 
 use \Mautic\Auth\ApiAuth;
@@ -35,9 +34,6 @@ class MauticAccess
     {
 
         $this->settingsUtils = $settingsUtils;
-
-        //Not sure why - but whatever
-        //session_start();
     
         //Preference center supported segments
         $this->preferenceCenterSegments = $this->settingsUtils->getSettingsValue('maltystPcSegments');
