@@ -253,11 +253,10 @@ class FetchController
         }
         
         // And then create a new confirmation token
-        $algo  ='sha512';
-        $emailConfirmationTokenClear  = bin2hex(random_bytes(64));
-        $emailConfirmationTokenHash   = hash($algo, $emailConfirmationTokenClear);
-        $emailConfirmationTokenPublic = $algo . $emailConfirmationTokenClear;
-        $isTokenCreated = $this->db->createEmailConfirmationToken($emailId, $emailConfirmationTokenHash, $algo);
+        [$emailConfirmationTokenHash, $emailConfirmationTokenPublic] = $this->utils->createToken();
+
+        // Record confirmation token into the database
+        $isTokenCreated = $this->db->createEmailConfirmationToken($emailId, $emailConfirmationTokenHash, Utils::TOKEN_ALGO);
         if (!$isTokenCreated) {
             $defaultResponse['error'] = 'Error generating confirmation email.';
             wp_send_json_error($defaultResponse, 500);
@@ -316,12 +315,13 @@ class FetchController
         }
 
         //Processing token && generating an encrypted hash
-        $splitToken =  $this->utils->processPublicToken($token);
-        if (is_null($splitToken)) {
+        [$tokenAlgo, $emailConfirmationTokenClear] = $this->utils->processPublicToken($token);
+
+        if (is_null($tokenAlgo) || is_null($emailConfirmationTokenClear)) {
             $defaultResponse['error'] = 'Invalid email confirmation token.';
             wp_send_json_error($defaultResponse, 400);
         }
-        $emailConfirmationTokenHash = hash($splitToken[1], $splitToken[0]);
+        $emailConfirmationTokenHash = hash($tokenAlgo, $emailConfirmationTokenClear);
 
         //Checking if records exists in database
         $tokenRecord = $this->db->getConfirmationTokenRecord($emailConfirmationTokenHash);
@@ -329,7 +329,6 @@ class FetchController
             $defaultResponse['error'] = 'Email confirmation token not found.';
             wp_send_json_error($defaultResponse, 400);
         }
-        $tokenId = $tokenRecord['id'];
         $emailId = $tokenRecord["fk_optins_id"];
 
         $optinRecord = $this->db->getEmailOptinRecordById($emailId);
