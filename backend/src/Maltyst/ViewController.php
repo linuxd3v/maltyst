@@ -57,7 +57,7 @@ class ViewController
         $tpl = 'confirmation';
 
         $data = [
-            'prefix'   => PREFIX,
+            'prefix'   => MALTYST_PREFIX,
             //'formType' => $tpl,
         ];
 
@@ -69,7 +69,7 @@ class ViewController
         $tpl = 'preference-center';
 
         $data = [
-            'prefix'   => PREFIX,
+            'prefix'   => MALTYST_PREFIX,
             //'formType' => $tpl,
         ];
 
@@ -82,7 +82,7 @@ class ViewController
         $tpl = 'optin';
 
         $data = [
-            'prefix'   => PREFIX,
+            'prefix'   => MALTYST_PREFIX,
             //'formType' => $tpl,
         ];
 
@@ -229,7 +229,7 @@ class ViewController
             'authorUrl'         => $authorUrl,
         ];
         $data = $userDetails;
-        $data['prefix'] = PREFIX;
+        $data['prefix'] = MALTYST_PREFIX;
 
         return $data;
     }

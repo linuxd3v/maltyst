@@ -70,7 +70,7 @@ class SettingsController
         $template = 'settings';
 
         $data = [
-            'prefix' => PREFIX, // Pass any necessary data to the template
+            'prefix' => MALTYST_PREFIX, // Pass any necessary data to the template
         ];
 
         echo $this->render($template, $data);
