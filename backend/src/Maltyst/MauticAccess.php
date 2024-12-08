@@ -256,7 +256,7 @@ class MauticAccess
 
 
 
-    public function sendEmailToSubscriberByEmailName($contactId, $emailName, $tokens=[]): array
+    public function sendEmailToSubscriberByEmailName(string $contactId, string $emailName, array $tokens=[]): array
     {
         list($status, $data) = $this->findEmailIdByName($emailName);
         if (!$status) {
