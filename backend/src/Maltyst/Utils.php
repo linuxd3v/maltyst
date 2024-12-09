@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 class Utils
 {
-    const string TOKEN_ALGO = "sha3-512";
+    const TOKEN_ALGO = "sha3-512";
 
     public function __construct()
     {
