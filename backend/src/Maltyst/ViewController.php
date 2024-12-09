@@ -4,8 +4,8 @@
 namespace Maltyst;
 
 use League\Plates\Engine;
-use Mustache_Engine;
-use Mustache_Loader_FilesystemLoader;
+// use Mustache_Engine;
+// use Mustache_Loader_FilesystemLoader;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,8 @@ class ViewController
 {
     private string $htmlDir;
     private Engine $platesEngine;
-    private Mustache_Engine $mustacheEngine;
+    // private Mustache_Engine $mustacheEngine;
+    private $mustacheEngine;
 
     private Database $db;
     private MauticAccess $mauticAccess;
