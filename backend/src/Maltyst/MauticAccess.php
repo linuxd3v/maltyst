@@ -62,7 +62,7 @@ class MauticAccess
             $this->segmentApi  = $this->mauticApi->newApi('segments',  $this->basicAuth, $apiUrl);
             $this->emailApi    = $this->mauticApi->newApi('emails',  $this->basicAuth, $apiUrl);
         } else {
-            new AdminMessage('Unable to configure mautic api - please provide all required configuration options');
+            new AdminMessage('Unable to access mautic api. You need to fill in the mautic instance address, and access details.');
         }
     }
 
