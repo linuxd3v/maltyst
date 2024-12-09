@@ -22,7 +22,24 @@ if (!fs.existsSync(buildParent)) {
 const generateArchive = async () => {
   try {
     const archivePath = path.join(buildParent, 'maltyst.zip');
-    console.log(`[INFO] Generating archive at: ${archivePath}`);
+
+    // Remove old archive
+    if (fs.existsSync(archivePath)) {
+      console.log(`[INFO] Remove old archive at: ${archivePath}`);
+      await fse.remove(archivePath);
+    }
+
+    // Iterate through FILES_TO_COPY and remove them from buildDir
+    await Promise.all(
+      FILES_TO_COPY.map(async (file) => {
+        const targetPath = path.join(buildDir, file);
+
+        if (fs.existsSync(targetPath)) {
+          await fse.remove(targetPath);
+          console.log(`[INFO]     Removed ${targetPath}`);
+        }
+      })
+    );
 
     // Copy necessary files
     await Promise.all(
@@ -30,7 +47,7 @@ const generateArchive = async () => {
         const srcDir = path.join(backendDir, file);
         const destDir = path.join(buildDir, file);
         if (fs.existsSync(srcDir)) {
-          await fse.copy(srcDir, destDir);
+          await fse.copy(srcDir, destDir, { overwrite: true });
           console.log(`[INFO] Copied ${srcDir} to ${destDir}`);
         } else {
           console.warn(`[WARNING] ${srcDir} does not exist and will not be copied.`);
