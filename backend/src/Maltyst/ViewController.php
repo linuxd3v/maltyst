@@ -25,14 +25,16 @@ class ViewController
     public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {   
         //HTML PHP rendering for views
-        $this->htmlDir  = __DIR__ . '/../html-views';
+        $this->htmlDir  = __DIR__ . '/../../html-views';
         $this->platesEngine = new \League\Plates\Engine($this->htmlDir, 'phtml');
 
-        //HTML MUSTACHE rendering for emails 
-        $mOptions =  ['extension' => '.html'];
-        $this->mustacheEngine = new Mustache_Engine(array(
-            'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/../dist/html', $mOptions),
-        ));
+        // Ill go ahead and disable this, I think this could just be rendered on the fly from the
+        // mjml server?
+        // //HTML MUSTACHE rendering for emails 
+        // $mOptions =  ['extension' => '.html'];
+        // $this->mustacheEngine = new Mustache_Engine(array(
+        //     'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/../dist/html', $mOptions),
+        // ));
 
 
         $this->db = $db;
