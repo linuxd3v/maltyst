@@ -124,7 +124,7 @@ final class Plugin
         add_action( 'wp_ajax_nopriv_maltystFetchGetSubscriptions', [$this->fetchController, 'maltystFetchGetSubscriptions'] );
         add_action( 'wp_ajax_maltystFetchGetSubscriptions', [$this->fetchController, 'maltystFetchGetSubscriptions'] );
     
-        add_action( 'wp_ajax_nopriv_maltystUpdateSubscriptions', [$$this->fetchController, 'maltystUpdateSubscriptions'] );
+        add_action( 'wp_ajax_nopriv_maltystUpdateSubscriptions', [$this->fetchController, 'maltystUpdateSubscriptions'] );
         add_action( 'wp_ajax_maltystUpdateSubscriptions', [$this->fetchController, 'maltystUpdateSubscriptions'] );
     
         add_action( 'wp_ajax_nopriv_maltystFetchPostOptinConfirmation', [$this->fetchController, 'maltystFetchPostOptinConfirmation'] );
