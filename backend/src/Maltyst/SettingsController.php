@@ -21,7 +21,7 @@ class SettingsController
     public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {
         // Initialize HTML rendering engine
-        $this->htmlDir = __DIR__ . '/../html-views';
+        $this->htmlDir = __DIR__ . '/../../html-views';
         $this->platesEngine = new Engine($this->htmlDir, 'phtml');
 
         // Inject dependencies
