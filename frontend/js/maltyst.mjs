@@ -1,6 +1,6 @@
-import initPreferenceCenter from './components/preference-center.mjs';
-import initDoubleOptinStart from './components/double-optin-start.mjs';
-import initDoubleOptinFinish from './components/double-optin-finish.mjs';
+import initPreferenceCenter from './public-components/preference-center.mjs';
+import initDoubleOptinStart from './public-components/double-optin-start.mjs';
+import initDoubleOptinFinish from './public-components/double-optin-finish.mjs';
 
 
 // Global object for this plugin, so we don't pollute a global namespace
