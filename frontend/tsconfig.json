@@ -10,8 +10,8 @@
       "useDefineForClassFields": false
   },
   "include": [
-      "js/**/*.ts",
-      "js/**/*.d.ts"
+      "src/**/*.ts",
+      "src/**/*.d.ts"
   ],
   "exclude": [
       "node_modules"
