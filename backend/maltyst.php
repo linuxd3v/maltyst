@@ -69,6 +69,7 @@ final class Plugin
     private $viewController;
     private $fetchController;
     private $settingsController;
+    private $settingsFetchController;
 
     private function __construct()
     {
@@ -80,6 +81,9 @@ final class Plugin
         $this->viewController = new ViewController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
         $this->fetchController = new FetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
         $this->settingsController = new SettingsController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+
+        $this->settingsFetchController = new SettingsFetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+
 
         $this->registerHooks();
         $this->registerShortcodes();
@@ -113,8 +117,23 @@ final class Plugin
 
     private function registerHooks()
     {
+
         // ============================================================================
-        // Registering Fetch handlers
+        // Registering admin fetch handlers
+        // ============================================================================    
+        add_action('rest_api_init', function () {
+            register_rest_route(MALTYST_PREFIX, '/save-settings', [
+                'methods' => 'POST',
+                'callback' => [$this->settingsFetchController, 'saveSettings'],
+                'permission_callback' => function () {
+                    return current_user_can('manage_options'); // Ensure the user has the correct permissions
+                },
+            ]);
+        });
+        
+
+        // ============================================================================
+        // Registering public fetch handlers
         // ============================================================================        
         
         // yes the "wp_ajax_" prefix is mandatory in wordpress, cannot be "wp_fetch_" 
