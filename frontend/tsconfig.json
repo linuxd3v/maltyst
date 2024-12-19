@@ -1,20 +1,19 @@
 {
-    "compilerOptions": {
-        "target": "es2021",
-        "module": "es2015",
-        "moduleResolution": "node",
-        "lib": ["es2021", "dom"],
-        "declaration": true,
-        "declarationMap": true,
-        "experimentalDecorators": true,
-        "useDefineForClassFields": false
-    },
-    "include": [
-        "src/**/*.ts",                      // Include all TypeScript files in the src folder
-        "src/**/*.d.ts"                     // Include type declarations
-    ],
-    "exclude": [
-        "node_modules",                     // Exclude dependencies
-        "dist"                              // Exclude compiled output
-    ]
+  "compilerOptions": {
+      "target": "es2021",
+      "module": "es2015",
+      "moduleResolution": "node",
+      "lib": ["es2021", "dom"],
+      "declaration": true,
+      "declarationMap": true,
+      "experimentalDecorators": true,
+      "useDefineForClassFields": false
+  },
+  "include": [
+      "js/**/*.ts",
+      "js/**/*.d.ts"
+  ],
+  "exclude": [
+      "node_modules"
+  ]
 }
