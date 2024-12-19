@@ -1,16 +1,17 @@
-import { getQueryParameter } from './utils.mjs';
+import { getQueryParameter } from './utils';
+import { ApiResponse } from '../types/global'
 
 //=========================================================================
 // 3. Opt-in Confirmation Form
 //=========================================================================
 
 // Cache elements
-const maltystConfirmation = document.querySelector('.maltyst-confirmation-cnt');
-const maltystConfirmationSpinner = maltystConfirmation?.querySelector('.maltystloader');
-const maltystConfirmationResponse = maltystConfirmation?.querySelector('.maltyst_result_msg');
+const maltystConfirmation = document.querySelector<HTMLElement>('.maltyst-confirmation-cnt');
+const maltystConfirmationSpinner = maltystConfirmation?.querySelector<HTMLElement>('.maltystloader');
+const maltystConfirmationResponse = maltystConfirmation?.querySelector<HTMLElement>('.maltyst_result_msg');
 
 // Submit opt-in confirmation using modern fetch API
-const submitOptinConfirmation = async () => {
+const submitOptinConfirmation = async (): Promise<void> => {
     if (!maltystConfirmationSpinner || !maltystConfirmationResponse) return;
 
     // Show the spinner
@@ -18,7 +19,7 @@ const submitOptinConfirmation = async () => {
 
     try {
         // Send POST request
-        const response = await fetch(maltyst_data.ajax_url, {
+        const response = await fetch(window.maltystData.fetch_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,17 +27,17 @@ const submitOptinConfirmation = async () => {
             body: JSON.stringify({
                 action: 'maltystFetchPostOptinConfirmation',
                 maltyst_optin_confirmation_token: getQueryParameter('maltyst_optin_confirmation_token'),
-                security: maltyst_data.nonce,
+                security: window.maltystData.nonce,
             }),
         });
 
-        // Parse the JSON response
+        const responseData: ApiResponse = await response.json();
+
+        // When status code is outside the range of 200–299
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData?.data?.error || 'An error occurred');
+            throw new Error(responseData?.error || 'An error occurred');
         }
 
-        const responseData = await response.json();
 
         // Show success message
         maltystConfirmationResponse.classList.add('success');
@@ -44,9 +45,10 @@ const submitOptinConfirmation = async () => {
         maltystConfirmationResponse.textContent = responseData.message;
     } catch (error) {
         // Show error message
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
         maltystConfirmationResponse.classList.add('error');
         maltystConfirmationResponse.classList.remove('maltysthide');
-        maltystConfirmationResponse.textContent = error.message;
+        maltystConfirmationResponse.textContent = errorMessage;
     } finally {
         // Hide the spinner
         maltystConfirmationSpinner.classList.add('maltysthide');
@@ -54,7 +56,7 @@ const submitOptinConfirmation = async () => {
 };
 
 // Initialize the double opt-in finish process
-export default function initDoubleOptinFinish() {
+export default function initDoubleOptinFinish(): void {
     if (maltystConfirmation) {
         submitOptinConfirmation();
     }

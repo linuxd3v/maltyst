@@ -1,13 +1,15 @@
-//=========================================================================
+import { ApiResponse } from '../types/global'
+
+//==========================================================================
 // 2. Email opt-in form submission handling
-//=========================================================================
+//==========================================================================
 
 // Elements
-const optinForm = document.querySelector('.maltyst-optin-frm');
-const optinFormSpinner = optinForm?.querySelector('.maltystloader');
-const optinFormResponseArea = optinForm?.querySelector('.maltyst_result_msg');
+const optinForm = document.querySelector<HTMLFormElement>('.maltyst-optin-frm');
+const optinFormSpinner = optinForm?.querySelector<HTMLElement>('.maltystloader');
+const optinFormResponseArea = optinForm?.querySelector<HTMLElement>('.maltyst_result_msg');
 
-const submitOptin = async () => {
+const submitOptin = async (): Promise<void> => {
     // Prevent double submission
     if (window.maltyst?.inProgressOptin) {
         return;
@@ -22,22 +24,24 @@ const submitOptin = async () => {
 
     try {
         // Collect form data
-        const emailField = optinForm.querySelector(`[name=${maltyst_data.prefix}_email]`);
+        const emailField = optinForm?.querySelector<HTMLInputElement>(`[name=${window.maltystData.prefix}_email]`);
         const email = emailField?.value;
-        const response = await fetch(maltyst_data.ajax_url, {
+        const response = await fetch(window.maltystData.fetch_url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'maltystAjaxAcceptOptin',
                 email: email,
-                security: maltyst_data.nonce,
+                security: window.maltystData.nonce,
             }),
         });
 
-        const result = await response.json();
+        // Decode the json
+        const result: ApiResponse = await response.json();
 
+        // When status code is outside the range of 200–299
         if (!response.ok) {
-            throw new Error(result?.data?.error || 'An error occurred.');
+            throw new Error(result?.error || 'An error occurred.');
         }
 
         // Success
@@ -47,9 +51,10 @@ const submitOptin = async () => {
 
     } catch (error) {
         // Error handling
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
         optinFormResponseArea?.classList.add('error');
         optinFormResponseArea?.classList.remove('maltysthide');
-        if (optinFormResponseArea) optinFormResponseArea.textContent = error.message;
+        if (optinFormResponseArea) optinFormResponseArea.textContent = errorMessage;
     } finally {
         // Reset spinner and allow submissions again
         optinFormSpinner?.classList.add('maltysthide');
@@ -57,7 +62,7 @@ const submitOptin = async () => {
     }
 };
 
-export default function initDoubleOptinStart() {
+export default function initDoubleOptinStart(): void {
     if (optinForm) {
         optinForm.addEventListener('submit', (e) => {
             e.preventDefault();
