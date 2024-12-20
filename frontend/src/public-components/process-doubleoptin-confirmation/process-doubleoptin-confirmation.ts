@@ -19,13 +19,13 @@ const submitOptinConfirmation = async (): Promise<void> => {
 
     try {
         // Send POST request
-        const response = await fetch(window.maltystData.fetch_url, {
+        const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/process-doubleoptin-confirmation`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                action: 'maltystFetchPostOptinConfirmation',
+                action: 'maltystProcessDoubleOptinConfirmation',
                 maltyst_optin_confirmation_token: getQueryParameter('maltyst_optin_confirmation_token'),
                 security: window.maltystData.nonce,
             }),

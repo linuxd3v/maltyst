@@ -36,7 +36,7 @@ const pullAccountInfo = async (): Promise<void> => {
 
     try {
         const response = await fetch(
-            `${window.maltystData?.fetch_url}?action=maltystFetchGetSubscriptions&maltystContactUqid=${getMaltystContactUqid()}&security=${window.maltystData?.nonce}`
+            `${window.maltystData.MALTYST_ROUTE}/get-subscriptions?maltystContactUqid=${getMaltystContactUqid()}&security=${window.maltystData?.nonce}`
         );
         if (!response.ok) throw new Error('Failed to fetch account info');
 
@@ -95,7 +95,7 @@ const updateAccountInfo = async (): Promise<void> => {
     );
 
     try {
-        const response = await fetch(window.maltystData?.fetch_url || '', {
+        const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/update-subscriptions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

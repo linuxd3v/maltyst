@@ -26,6 +26,7 @@ define('MALTYST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MALTYST_FETCH_URL', admin_url('admin-fetch.php', is_ssl() ? 'https' : 'http'));
 define('MALTYST_PREFIX', 'maltyst');
 define('MALTYST_MANIFEST', MALTYST_PLUGIN_DIR . '/.vite/manifest.json');
+define('MALTYST_ROUTE', MALTYST_PREFIX . "/v1");
 
 
 // ============================================================================
@@ -122,7 +123,7 @@ final class Plugin
         // Registering admin fetch handlers
         // ============================================================================    
         add_action('rest_api_init', function () {
-            register_rest_route(MALTYST_PREFIX, '/save-settings', [
+            register_rest_route(MALTYST_ROUTE, '/save-settings', [
                 'methods' => 'POST',
                 'callback' => [$this->adminFetchController, 'saveSettings'],
                 'permission_callback' => function () {
@@ -130,24 +131,49 @@ final class Plugin
                 },
             ]);
         });
+
+        // Wordpress nonce can expire so we need to get a new one once in a while. 🤷‍♂️ 
+        add_action('rest_api_init', function () {
+            register_rest_route(MALTYST_ROUTE, '/get-nonce', [
+                'methods' => 'GET',
+                'callback' => [$this->adminFetchController, 'getNonce'],
+                'permission_callback' => '__return_true',
+            ]);
+        });
         
+
+
 
         // ============================================================================
         // Registering public fetch handlers
         // ============================================================================        
-        
-        // yes the "wp_ajax_" prefix is mandatory in wordpress, cannot be "wp_fetch_" 
-        add_action('wp_ajax_nopriv_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
-        add_action('wp_ajax_maltystFetchAcceptOptin', [$this->fetchController, 'maltystFetchAcceptOptin']);
+        register_rest_route(MALTYST_ROUTE, '/start-optin', [
+            'methods' => 'POST',
+            'callback' => [$this->fetchController, 'maltystStartOptin'],
+            'permission_callback' => '__return_true', // Publicly accessible
+        ]);
 
-        add_action( 'wp_ajax_nopriv_maltystFetchGetSubscriptions', [$this->fetchController, 'maltystFetchGetSubscriptions'] );
-        add_action( 'wp_ajax_maltystFetchGetSubscriptions', [$this->fetchController, 'maltystFetchGetSubscriptions'] );
+        // Route for getting subscriptions
+        register_rest_route(MALTYST_ROUTE, '/get-subscriptions', [
+            'methods' => 'GET',
+            'callback' => [$this->fetchController, 'maltystGetSubscriptions'],
+            'permission_callback' => '__return_true', // Publicly accessible
+        ]);
+
+        // Route for updating subscriptions
+        register_rest_route(MALTYST_ROUTE, '/update-subscriptions', [
+            'methods' => 'POST',
+            'callback' => [$this->fetchController, 'maltystUpdateSubscriptions'],
+            'permission_callback' => '__return_true', // Publicly accessible
+        ]);
     
-        add_action( 'wp_ajax_nopriv_maltystUpdateSubscriptions', [$this->fetchController, 'maltystUpdateSubscriptions'] );
-        add_action( 'wp_ajax_maltystUpdateSubscriptions', [$this->fetchController, 'maltystUpdateSubscriptions'] );
-    
-        add_action( 'wp_ajax_nopriv_maltystFetchPostOptinConfirmation', [$this->fetchController, 'maltystFetchPostOptinConfirmation'] );
-        add_action( 'wp_ajax_maltystFetchPostOptinConfirmation', [$this->fetchController, 'maltystFetchPostOptinConfirmation'] );
+
+        // Route for posting opt-in confirmation
+        register_rest_route(MALTYST_ROUTE, '/process-doubleoptin-confirmation', [
+            'methods' => 'POST',
+            'callback' => [$this->fetchController, 'maltystProcessDoubleOptinConfirmation'],
+            'permission_callback' => '__return_true', // Publicly accessible
+        ]);
         
 
         // ============================================================================
@@ -214,9 +240,9 @@ final class Plugin
 
         // Pass backend data to the JS
         $maltystData = [
-            'fetch_url' => MALTYST_FETCH_URL,
-            'prefix' => MALTYST_PREFIX,
+            'MALTYST_PREFIX' => MALTYST_PREFIX,
             'nonce' => wp_create_nonce('fetch-nonce'),
+            'MALTYST_ROUTE' => MALTYST_ROUTE
         ];
         wp_add_inline_script(
             'maltyst',

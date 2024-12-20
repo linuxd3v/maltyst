@@ -1,8 +1,12 @@
 import { ApiResponse } from '../../types/global'
 
 //==========================================================================
-// 2. Email opt-in form submission handling
+// 2. Opt-in form submission handling
 //==========================================================================
+
+// Note - that depending on plugin configuration - this could be:
+// a) direct optin (immediately add to the list)
+// b) double optin (email confirmation needed)
 
 // Elements
 const optinForm = document.querySelector<HTMLFormElement>('.maltyst-optin-frm');
@@ -24,9 +28,11 @@ const submitOptin = async (): Promise<void> => {
 
     try {
         // Collect form data
-        const emailField = optinForm?.querySelector<HTMLInputElement>(`[name=${window.maltystData.prefix}_email]`);
+        const emailField = optinForm?.querySelector<HTMLInputElement>(`[name=${window.maltystData.MALTYST_PREFIX}_email]`);
         const email = emailField?.value;
-        const response = await fetch(window.maltystData.fetch_url, {
+
+        // Start the optin (double optin could be optional depending on maltyst settings)
+        const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/start-optin`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -62,7 +68,7 @@ const submitOptin = async (): Promise<void> => {
     }
 };
 
-export default function initDoubleOptinStart(): void {
+export default function initOptinStart(): void {
     if (optinForm) {
         optinForm.addEventListener('submit', (e) => {
             e.preventDefault();
