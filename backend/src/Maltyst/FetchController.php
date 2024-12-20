@@ -116,7 +116,7 @@ class FetchController
     //===========================================================================
     // Retrieving subscriptions for a user
     //===========================================================================
-    public function maltystFetchGetSubscriptions(): void
+    public function maltystGetSubscriptions(): void
     {
         // Params
         $nonce   = isset($_GET['security']) ? $_GET['security'] : null;
@@ -194,7 +194,7 @@ class FetchController
 
 
     // Accepting user optin - this will dispatch double-optin email
-    public function maltystFetchAcceptOptin (): void
+    public function maltystStartOptin (): void
     {
         // Check for nonce security
         $nonce = $_POST['security'];
@@ -289,7 +289,7 @@ class FetchController
     //===========================================================================
     // Processing double optin confirmation
     //===========================================================================
-    public function maltystFetchPostOptinConfirmation(): void
+    public function maltystProcessDoubleOptinConfirmation(): void
     {
 
         // Params
