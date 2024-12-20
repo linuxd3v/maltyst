@@ -10,9 +10,9 @@ declare global {
             inProgressPcSubmission?: boolean;
         };
         maltystData: {
-            fetch_url: string;
-            prefix: string;
             nonce: string;
+            MALTYST_PREFIX: string;
+            MALTYST_ROUTE: string;
         };
     }
 }
