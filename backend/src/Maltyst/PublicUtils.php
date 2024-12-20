@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Utils
+class publicUtils
 {
     const TOKEN_ALGO = "sha3-512";
 

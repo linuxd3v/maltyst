@@ -18,15 +18,15 @@ class AdminFetchController
     private Database $db;
     private MauticAccess $mauticAccess;
 
-    private Utils $utils;
+    private PublicUtils $publicUtils;
     private SettingsUtils $settingsUtils;
 
-    public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
+    public function __construct(Database $db, PublicUtils $publicUtils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {
         $this->db = $db;
         $this->mauticAccess = $mauticAccess;
 
-        $this->utils = $utils;
+        $this->publicUtils = $publicUtils;
         $this->settingsUtils = $settingsUtils;
     }
 

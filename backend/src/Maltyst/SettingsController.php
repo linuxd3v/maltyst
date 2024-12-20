@@ -14,11 +14,11 @@ class SettingsController
     private Engine $platesEngine;
 
     private Database $db;
-    private Utils $utils;
+    private PublicUtils $publicUtils;
     private MauticAccess $mauticAccess;
     private SettingsUtils $settingsUtils;
 
-    public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
+    public function __construct(Database $db, PublicUtils $publicUtils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {
         // Initialize HTML rendering engine
         $this->htmlDir = __DIR__ . '/../../html-views';
@@ -26,7 +26,7 @@ class SettingsController
 
         // Inject dependencies
         $this->db = $db;
-        $this->utils = $utils;
+        $this->publicUtils = $publicUtils;
         $this->mauticAccess = $mauticAccess;
         $this->settingsUtils = $settingsUtils;
     }

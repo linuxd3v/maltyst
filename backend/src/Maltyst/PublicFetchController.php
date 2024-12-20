@@ -8,21 +8,21 @@ if (!defined('ABSPATH')) {
 
 use Fgribreau\MailChecker;
 
-class FetchController
+class PublicFetchController
 {
 
     private Database $db;
     private MauticAccess $mauticAccess;
 
-    private Utils $utils;
+    private PublicUtils $publicUtils;
     private SettingsUtils $settingsUtils;
 
-    public function __construct(Database $db, Utils $utils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
+    public function __construct(Database $db, PublicUtils $publicUtils, MauticAccess $mauticAccess, SettingsUtils $settingsUtils)
     {
         $this->db = $db;
         $this->mauticAccess = $mauticAccess;
 
-        $this->utils = $utils;
+        $this->publicUtils = $publicUtils;
         $this->settingsUtils = $settingsUtils;
     }
 
@@ -253,7 +253,7 @@ class FetchController
         }
         
         // And then create a new confirmation token
-        [$emailConfirmationTokenHash, $emailConfirmationTokenPublic] = $this->utils->createToken();
+        [$emailConfirmationTokenHash, $emailConfirmationTokenPublic] = $this->publicUtils->createToken();
 
         // Record confirmation token into the database
         $isTokenCreated = $this->db->createEmailConfirmationToken($emailId, $emailConfirmationTokenHash, Utils::TOKEN_ALGO);
@@ -315,7 +315,7 @@ class FetchController
         }
 
         //Processing token && generating an encrypted hash
-        [$tokenAlgo, $emailConfirmationTokenClear] = $this->utils->processPublicToken($token);
+        [$tokenAlgo, $emailConfirmationTokenClear] = $this->publicUtils->processPublicToken($token);
 
         if (is_null($tokenAlgo) || is_null($emailConfirmationTokenClear)) {
             $defaultResponse['error'] = 'Invalid email confirmation token.';

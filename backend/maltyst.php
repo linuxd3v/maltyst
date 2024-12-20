@@ -63,27 +63,27 @@ final class Plugin
 {
     private static ?Plugin $instance = null;
 
-    private $utils;
+    private $publicUtils;
     private $settingsUtils;
     private $database;
     private $mauticAccess;
     private $viewController;
-    private $fetchController;
+    private $publicFetchController;
     private $settingsController;
     private $adminFetchController;
 
     private function __construct()
     {
         // Initialize dependencies
-        $this->utils = new Utils();
+        $this->publicUtils = new publicUtils();
         $this->settingsUtils = new SettingsUtils();
         $this->database = new Database();
         $this->mauticAccess = new MauticAccess($this->settingsUtils);
-        $this->viewController = new ViewController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
-        $this->fetchController = new FetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
-        $this->settingsController = new SettingsController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+        $this->viewController = new ViewController($this->database, $this->publicUtils, $this->mauticAccess, $this->settingsUtils);
+        $this->publicFetchController = new PublicFetchController($this->database, $this->publicUtils, $this->mauticAccess, $this->settingsUtils);
+        $this->settingsController = new SettingsController($this->database, $this->publicUtils, $this->mauticAccess, $this->settingsUtils);
 
-        $this->adminFetchController = new AdminFetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+        $this->adminFetchController = new AdminFetchController($this->database, $this->publicUtils, $this->mauticAccess, $this->settingsUtils);
 
 
         $this->registerHooks();
@@ -149,21 +149,21 @@ final class Plugin
         // ============================================================================        
         register_rest_route(MALTYST_ROUTE, '/start-optin', [
             'methods' => 'POST',
-            'callback' => [$this->fetchController, 'maltystStartOptin'],
+            'callback' => [$this->publicFetchController, 'maltystStartOptin'],
             'permission_callback' => '__return_true', // Publicly accessible
         ]);
 
         // Route for getting subscriptions
         register_rest_route(MALTYST_ROUTE, '/get-subscriptions', [
             'methods' => 'GET',
-            'callback' => [$this->fetchController, 'maltystGetSubscriptions'],
+            'callback' => [$this->publicFetchController, 'maltystGetSubscriptions'],
             'permission_callback' => '__return_true', // Publicly accessible
         ]);
 
         // Route for updating subscriptions
         register_rest_route(MALTYST_ROUTE, '/update-subscriptions', [
             'methods' => 'POST',
-            'callback' => [$this->fetchController, 'maltystUpdateSubscriptions'],
+            'callback' => [$this->publicFetchController, 'maltystUpdateSubscriptions'],
             'permission_callback' => '__return_true', // Publicly accessible
         ]);
     
@@ -171,7 +171,7 @@ final class Plugin
         // Route for posting opt-in confirmation
         register_rest_route(MALTYST_ROUTE, '/process-doubleoptin-confirmation', [
             'methods' => 'POST',
-            'callback' => [$this->fetchController, 'maltystProcessDoubleOptinConfirmation'],
+            'callback' => [$this->publicFetchController, 'maltystProcessDoubleOptinConfirmation'],
             'permission_callback' => '__return_true', // Publicly accessible
         ]);
         
@@ -238,7 +238,7 @@ final class Plugin
         }
     
 
-        // Pass backend data to the JS
+        // Pass backend data to JS
         $maltystData = [
             'MALTYST_PREFIX' => MALTYST_PREFIX,
             'nonce' => wp_create_nonce('fetch-nonce'),
