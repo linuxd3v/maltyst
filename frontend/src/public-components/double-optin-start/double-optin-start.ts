@@ -1,4 +1,4 @@
-import { ApiResponse } from '../types/global'
+import { ApiResponse } from '../../types/global'
 
 //==========================================================================
 // 2. Email opt-in form submission handling

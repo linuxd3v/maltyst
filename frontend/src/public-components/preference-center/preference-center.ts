@@ -1,4 +1,4 @@
-import {isQueryParameterPresent, getMaltystContactUqid} from './utils';
+import {isQueryParameterPresent, getMaltystContactUqid} from '../utils';
 
 //==========================================================================
 // 3. Preference Center

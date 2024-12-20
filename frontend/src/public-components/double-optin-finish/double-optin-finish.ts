@@ -1,5 +1,5 @@
-import { getQueryParameter } from './utils';
-import { ApiResponse } from '../types/global'
+import { getQueryParameter } from '../utils';
+import { ApiResponse } from '../../types/global'
 
 //=========================================================================
 // 3. Opt-in Confirmation Form
