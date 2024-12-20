@@ -69,7 +69,7 @@ final class Plugin
     private $viewController;
     private $fetchController;
     private $settingsController;
-    private $settingsFetchController;
+    private $adminFetchController;
 
     private function __construct()
     {
@@ -82,7 +82,7 @@ final class Plugin
         $this->fetchController = new FetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
         $this->settingsController = new SettingsController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
 
-        $this->settingsFetchController = new SettingsFetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
+        $this->adminFetchController = new AdminFetchController($this->database, $this->utils, $this->mauticAccess, $this->settingsUtils);
 
 
         $this->registerHooks();
@@ -124,7 +124,7 @@ final class Plugin
         add_action('rest_api_init', function () {
             register_rest_route(MALTYST_PREFIX, '/save-settings', [
                 'methods' => 'POST',
-                'callback' => [$this->settingsFetchController, 'saveSettings'],
+                'callback' => [$this->adminFetchController, 'saveSettings'],
                 'permission_callback' => function () {
                     return current_user_can('manage_options'); // Ensure the user has the correct permissions
                 },

@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 
 use Fgribreau\MailChecker;
 
-class SettingsFetchController
+class AdminFetchController
 {
 
     private Database $db;
