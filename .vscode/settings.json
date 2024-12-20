@@ -1,5 +1,8 @@
 {
     "intelephense.environment.includePaths": [
         "backend/vendor/php-stubs/wordpress-stubs"
-    ]
+    ],
+    "[typescript]": {
+        "editor.tabSize": 2
+    }
 }
