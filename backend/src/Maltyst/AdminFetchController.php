@@ -30,6 +30,11 @@ class AdminFetchController
         $this->settingsUtils = $settingsUtils;
     }
 
+    public function getNonce(WP_REST_Request $request): WP_REST_Response
+    {
+        return rest_ensure_response(['nonce' => wp_create_nonce('wp_rest')]);
+    }
+
     //===========================================================================
     // Updating subscriptions for user
     //===========================================================================
