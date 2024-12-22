@@ -1,23 +1,22 @@
 {
   "compilerOptions": {
-      "target": "es2021",
-      "module": "es2015",
-      "moduleResolution": "node",
-      "lib": ["es2021", "dom"],
-      "declaration": true,
-      "declarationMap": true,
-      "experimentalDecorators": true,
-      "useDefineForClassFields": false,
-      "typeRoots": ["./src/types"],
-      "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "target": "es2021",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "lib": ["es2021", "dom"],
+    "declaration": true,
+    "declarationMap": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "typeRoots": ["./src/types"],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": [
-      "src/**/*.ts",
-      "src/**/*.d.ts",
-      "src/**/*.scss"
-
-    ],
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.scss"
+  ],
   "exclude": [
-      "node_modules"
+    "node_modules"
   ]
 }
