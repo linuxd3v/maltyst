@@ -127,11 +127,19 @@ final class Plugin
                 'methods' => 'POST',
                 'callback' => [$this->adminFetchController, 'saveSettings'],
                 'permission_callback' => function () {
-                    return current_user_can('manage_options'); // Ensure the user has the correct permissions
+                    return current_user_can('manage_options');
                 },
             ]);
         });
-
+        add_action('rest_api_init', function () {
+            register_rest_route(MALTYST_ROUTE, '/get-settings', [
+                'methods' => 'GET',
+                'callback' => [$this->adminFetchController, 'getSettings'],
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
+            ]);
+        });
         // Wordpress nonce can expire so we need to get a new one once in a while. 🤷‍♂️ 
         add_action('rest_api_init', function () {
             register_rest_route(MALTYST_ROUTE, '/get-nonce', [
