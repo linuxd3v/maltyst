@@ -1,19 +1,58 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    // how far to downlevel your code before handing it off to Babel or Vite
+    // Ill just set this to most modern, because babel/vite can fix incompatibilities
+    "target": "esnext",
+
+    // https://www.typescriptlang.org/tsconfig/#module
+    // Because I use bundler- i'm just gonna leave it as esnext
     "module": "esnext",
-    "moduleResolution": "node",
-    "lib": ["es2021", "dom"],
+
+    // module resolution strategy: for use with bundlers
+    "moduleResolution": "bundler",
+
+    // include some default set of type definitions for built-in JS APIs
+    "lib": ["ESNext", "dom"],
+
+    // Generate .d.ts files for every TypeScript or JavaScript file
     "declaration": true,
+
+    // Generate .d.ts.map files
     "declarationMap": true,
+    
+    // lit.js recommended
+    // https://lit.dev/docs/components/decorators/#decorators-typescript
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
+    
+    // Which types to include
+    // All paths are relative to the tsconfig.json.
     "typeRoots": ["./src/types", "./node_modules/@types"],
+
+    // all kinds of strictness
+    // https://www.typescriptlang.org/tsconfig/#strict
     "strict": true,
-    "allowSyntheticDefaultImports": true,
+
+    // Allows this simpler syntax: 
+    // import React from "react";
+    // instead of:
+    // import * as React from "react";
+    // "allowSyntheticDefaultImports": true,
+
+    // ensures TypeScript doesn’t emit code features that require analyzing multiple files at once 
+    // so yes we do want that for vite.js
     "isolatedModules": true,
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+
+    // VS Code has the ability for a extension to automatically include language service plugins, 
+    // and so you may have some running in your editor without needing to define them in your ditor
+    // "plugins": [],
+
+    // Just relative to a directory where tsconfig file is
+    "baseUrl": "./",
+    // where compiled files should go
+    "outDir": "dist",
+    "rootDir": "src",
+    "declarationDir": "types" 
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }
