@@ -1,4 +1,5 @@
 {
+    "typescript.tsdk": "./frontend/node_modules/typescript/lib",
     "intelephense.environment.includePaths": [
         "backend/vendor/php-stubs/wordpress-stubs"
     ],
