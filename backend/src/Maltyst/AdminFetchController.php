@@ -36,7 +36,36 @@ class AdminFetchController
     }
 
     //===========================================================================
-    // Updating subscriptions for user
+    // Getting a setting
+    //===========================================================================
+    public function getSettings(WP_REST_Request $request): WP_REST_Response|WP_Error
+    {
+        $params = $request->get_json_params();
+    
+        // Check if 'option_names' is provided and is an array
+        if (!isset($params['option_names']) || !is_array($params['option_names'])) {
+            return new WP_Error('invalid_data', 'Invalid data provided. Expected an array of option names.', ['status' => 400]);
+        }
+    
+        $option_names = array_map('sanitize_text_field', $params['option_names']); // Sanitize each option name
+        $options = [];
+    
+        // Fetch each option value
+        foreach ($option_names as $option_name) {
+            $options[$option_name] = get_option($option_name, null); // Default to null if the option does not exist
+        }
+    
+        // Return the options as a response
+        return rest_ensure_response([
+            'message' => 'Settings retrieved successfully',
+            'options' => $options,
+        ]);
+    }
+    
+
+
+    //===========================================================================
+    // Saving setting
     //===========================================================================
     public function saveSettings(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
