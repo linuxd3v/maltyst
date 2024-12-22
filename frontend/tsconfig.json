@@ -8,12 +8,15 @@
       "declarationMap": true,
       "experimentalDecorators": true,
       "useDefineForClassFields": false,
-      "typeRoots": ["./src/types"]
+      "typeRoots": ["./src/types"],
+      "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": [
       "src/**/*.ts",
-      "src/**/*.d.ts"
-  ],
+      "src/**/*.d.ts",
+      "src/**/*.scss"
+
+    ],
   "exclude": [
       "node_modules"
   ]
