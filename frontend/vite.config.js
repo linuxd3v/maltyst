@@ -120,8 +120,9 @@ export default defineConfig(({ mode }) => {
       outDir: buildDir,
       rollupOptions: {
         input: {
-          'js-maltyst': resolve(__dirname, './js/maltyst.mjs'),
-          'style-maltyst': resolve(__dirname, './scss/maltyst.scss'),
+          'js-maltyst-public': resolve(__dirname, './src/maltyst-public.ts'),
+          'js-maltyst-admin': resolve(__dirname, './src/maltyst-admin.ts'),
+          // 'style-maltyst': resolve(__dirname, './scss/maltyst.scss'),
         },
       },
     },

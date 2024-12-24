@@ -8,8 +8,11 @@
     // Because I use bundler- i'm just gonna leave it as esnext
     "module": "esnext",
 
-    // module resolution strategy: for use with bundlers
-    "moduleResolution": "bundler",
+    // module resolution strategy:
+    // nodenext  - complains about needing to add extensions, like .ts
+    // 'bundler' - generated bunch of warnings in the ts server logs (WatchType: Failed Lookup Locations)
+    // node      - generated bunch of warnings in the ts server logs (WatchType: Failed Lookup Locations)
+    "moduleResolution": "node",
 
     // include some default set of type definitions for built-in JS APIs
     "lib": ["ESNext", "dom"],
@@ -43,6 +46,12 @@
     // so yes we do want that for vite.js
     "isolatedModules": true,
 
+    "allowArbitraryExtensions": true,
+
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+
+    "types": ["node"],
+
     // VS Code has the ability for a extension to automatically include language service plugins, 
     // and so you may have some running in your editor without needing to define them in your ditor
     // "plugins": [],
@@ -54,5 +63,8 @@
     "rootDir": "src",
     "declarationDir": "types" 
   },
-  "include": ["src"]
+  "include": [
+    "./src/types/global.d.ts",
+    "./src"
+  ]
 }
