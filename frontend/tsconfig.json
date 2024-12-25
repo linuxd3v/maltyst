@@ -30,7 +30,7 @@
     
     // Which types to include
     // All paths are relative to the tsconfig.json.
-    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "typeRoots": ["src/js/types", "./node_modules/@types"],
 
     // all kinds of strictness
     // https://www.typescriptlang.org/tsconfig/#strict
@@ -64,7 +64,7 @@
     "declarationDir": "types" 
   },
   "include": [
-    "./src/types/global.d.ts",
+    "src/js/types/global.d.ts",
     "./src"
   ]
 }
