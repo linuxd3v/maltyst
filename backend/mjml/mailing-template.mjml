@@ -3,8 +3,10 @@
 
     <!-- Import Ubuntu font from Google Fonts -->
     <mj-font name="Ubuntu" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" />
-    
 
+	<mj-attributes>
+		<mj-text font-family="system-ui, Ubuntu, sans-serif"></mj-text>
+	</mj-attributes>
 
     <!-- Define your styles here -->
     <mj-style> 
@@ -22,7 +24,7 @@
 		}
 
 		*{
-			font-family: system-ui, Ubuntu, Helvetica, Arial, sans-serif; 
+			font-family: system-ui, Ubuntu, sans-serif; 
 		}		
 
 		/* Customize paragraph styles */
@@ -267,7 +269,7 @@
 
 
 	<mj-section padding-top="0" padding-bottom="20px" background-color="#ecf4ed" border-top="1px solid #c3c3c3">
-	  <mj-column background-color="#e6e6e6">
+	  <mj-column background-color="#f2f2f2">
 		<mj-spacer>
 		</mj-spacer>
 
