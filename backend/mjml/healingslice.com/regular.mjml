@@ -1,0 +1,323 @@
+<mjml>
+  <mj-head>
+
+    <!-- Import Ubuntu font from Google Fonts -->
+    <mj-font name="Ubuntu" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" />
+
+	<mj-attributes>
+		<mj-text font-family="system-ui, Ubuntu, sans-serif"></mj-text>
+	</mj-attributes>
+
+    <!-- Define your styles here -->
+    <mj-style> 
+		/* Reset margins and paddings for paragraphs and list items */
+		p, li {
+			margin: 0 0 0 0; /* top, right, bottom, left */
+			padding: 0;
+			line-height: 1.4em;
+		}
+
+		/* Hover state for links */
+		a:hover {
+			color: #45884e !important;
+			cursor: pointer;
+		}
+
+		*{
+			font-family: system-ui, Ubuntu, sans-serif; 
+		}		
+
+		/* Customize paragraph styles */
+		p{
+			font-size: 18px;
+			line-height: 1.5em;
+			color: #000000;
+		}
+		p + p {
+			padding-top: 1em;
+		}
+		.no-margin {
+			margin: 0;
+		}
+
+		/* Footer links styling */
+		.footer-links a {
+			color: #6d6d6d !important;
+			text-decoration: underline !important;
+			margin: 0 8px; 
+		}
+		.footer-links a:hover {
+			text-decoration: underline !important;
+			color: #45884e !important;
+		}
+
+
+		/* "Made with opensource" links styling */
+		.madewith-links span{
+			color: #6d6d6d !important;
+		}
+		.madewith-links a {
+			color: #6d6d6d !important;
+			text-decoration: none !important;
+		}
+		.madewith-links a:hover {
+			text-decoration: underline !important;
+			color: #45884e !important;
+		}
+    </mj-style>
+
+
+	<!-- link styles  -->
+	<mj-style inline="inline">
+
+	</mj-style>
+
+    <!-- Define Global Styles -->
+    <mj-style inline="inline">
+
+    </mj-style>
+  </mj-head>
+
+
+
+
+
+
+  <!-- BODY -->
+  <mj-body background-color="#ecf4ed">
+	<mj-section background-color="#ffffff">
+	  <mj-column>
+		<mj-spacer height="20px">
+		</mj-spacer>
+		<mj-image src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-healingslice-logo.svg" padding-right="0px" padding-left="0px" href="https://healingslice.com" width="280px"></mj-image>
+	  </mj-column>
+	</mj-section>
+
+
+	<mj-section padding-top="0px" padding-bottom="0px">
+	  <mj-column background-color="#ffffff">
+		<mj-image src="https://healingslice.com/wp-content/uploads/2024/12/matyst-healingslice-sourdough-cranberry-banana-bread2.jpg">
+		</mj-image>
+		<mj-image src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-healingslice-sourdough-cranberry-banana-bread3.jpg">
+		</mj-image>
+
+		<mj-text>
+		  <p style="font-style:italic;">
+			Is there anything better than cozying up with a bite of the Sourdough Cranberry Banana Bread piece in the cold?!
+		  </p>
+
+		  <p>
+			We're almost there! 🎅🎅🎅
+		  </p>
+
+		  <p>
+			I have an incredible (easy!) Sourdough Cranberry Banana Bread recipe for you today.
+		  </p>
+		  <p>
+			I've been working on it all week, and I finally got the taste and texture just right.
+		  </p>
+		  <p>
+			  <span><strong>My 9-ingredient cranbery bread is buttery, super fluffy, and moist as a cloud. They will melt in your mouth!</strong></span>
+		  </p>
+		  <p>
+			My version includes banana and raspberries, but you can use any nuts you'd like.
+		  </p>
+		  <p>
+			<a target="_blank" rel="noopener noreferrer" href="https://healingslice.com/sourdough-cranberry-banana-bread">
+			[ Click here for the step-by-step recipe ]
+			</a>
+		  </p>
+		  <p>
+			Wishing you all a very merry &amp; warm holidays! Big love to everyone! Happy Quanza.
+		  </p>
+		  <p>
+			Thank you so much for being here.
+		  </p>
+		  <p padding-top="40px">
+			Samantha, Let's bake the  world a better place.
+		  </p>
+		</mj-text>
+	
+	  </mj-column>
+	</mj-section>
+
+
+	<mj-section padding-top="0px" padding-bottom="0px" background-color="#ffffff">
+	  <mj-column vertical-align="middle">
+		<mj-divider border-width="1px" border-color="#c3c3c3" padding-right="10px" padding-left="10px">
+		</mj-divider>
+	  </mj-column>
+	</mj-section>
+
+
+	<mj-section padding-top="0px" padding-bottom="20px" background-color="#ffffff">
+	  <mj-column vertical-align="middle">
+		<mj-image src="https://healingslice.com/wp-content/uploads/2023/11/learn-how-to-shape-sourdough-bread.gif" padding-right="0px" padding-left="0px" href="https://healingslice.com/two-simple-ways-to-shape-your-sourdough-bread" width="280px">
+		</mj-image>
+	  </mj-column>
+
+      <!-- Second Column: Linked Text -->
+      <mj-column vertical-align="middle">
+        <mj-text
+		  font-style="italic"
+          font-size="26px"
+          align="center"
+          color="#6d6d6d" 
+        >
+          <a href="https://healingslice.com/two-simple-ways-to-shape-your-sourdough-bread">
+            Learn how to shape the sourdough bread
+          </a>
+        </mj-text>
+	  </mj-column>
+	</mj-section>
+	
+
+
+	<!-- <mj-section padding-top="0px" padding-bottom="0px">
+	  <mj-column background-color="#ffffff">
+		<mj-divider border-width="1px" border-color="#c3c3c3" padding-right="10px" padding-left="10px">
+		</mj-divider>
+		<mj-spacer>
+		</mj-spacer>
+		<mj-text>Content 1
+		</mj-text>
+	  </mj-column>
+	</mj-section> -->
+
+
+
+
+	<!-- Social area -->
+	<mj-section padding-top="0px" padding-bottom="20px" background-color="#f2ede5">
+	  <mj-column vertical-align="middle" width="30%" padding="20px 20px 10px 20px">
+		<mj-image src="https://healingslice.com/wp-content/uploads/2023/11/samantha-healingslice-profile-square2-768x768.jpeg" 
+		padding="0px" 
+		border-radius="200px"
+		href="https://healingslice.com/two-simple-ways-to-shape-your-sourdough-bread" 
+		width="190px">
+		</mj-image>
+	  </mj-column>
+
+      <!-- Second Column: Linked Text -->
+      <mj-column vertical-align="middle" width="70%" padding="20px 20px 10px 20px">
+	  	<mj-text padding="0" font-size="14px" line-height="30px" align="center" css-class="about-area">
+			<b>Hello! I'm Samantha.</b><br>  
+			 Thank you for reading! let’s cook up a storm together and bake the world a better place!
+		</mj-text>
+
+		<mj-social 
+				padding="20px 0 0 0"
+				font-size="10px" 
+				icon-size="36px" 
+				icon-height="16px" 
+				icon-padding="5px" 
+				border-radius="4px" 
+				mode="horizontal" 
+				color="white">
+
+		  <mj-social-element 
+		  	name="custom" 
+		  	src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-instagram.svg" 
+		  	background-color="#fff" 
+			href="https://www.instagram.com/healing.slice/">
+		  </mj-social-element>
+		  
+		  <mj-social-element 
+		  	name="custom" 
+			src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-facebook.svg" 
+		  	href="https://www.facebook.com/people/Samantha-Healing-Slice/61558022097206" 
+			background-color="#fff" 
+			padding-left="10px">
+		  </mj-social-element>
+		  
+		  <mj-social-element 
+		  	name="custom" 
+		  	href="https://www.tiktok.com/@healingslice" 
+			src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-tiktok-1.svg" 
+			background-color="#fff" 
+			padding-left="10px">
+		  </mj-social-element>
+		  
+		  <mj-social-element 
+		  	name="custom" 
+			src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-envelope-at.svg" 
+			href="https://healingslice.com/contact" 
+			color="#880b0b" 
+			background-color="#fff" 
+			padding-left="10px">
+		  </mj-social-element>
+		  
+		  <mj-social-element 
+		  	name="custom" 
+		  	src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-threads.svg" 
+			href="https://www.threads.net/@healing.slice" 
+			background-color="#fff" 
+			icon-height="10px" 
+			padding-left="10px">
+		  </mj-social-element>
+		  
+		  <mj-social-element 
+		  	name="custom" 
+		  	src="https://healingslice.com/wp-content/uploads/2024/12/maltyst-pinterest.svg" 
+			href="https://www.pinterest.com/healingslice" 
+			background-color="#fff" 
+			padding-left="10px">
+		  </mj-social-element>
+		</mj-social>
+	  </mj-column>
+	</mj-section>
+
+
+	<mj-section padding-top="0" padding-bottom="20px" background-color="#ecf4ed" border-top="1px solid #c3c3c3">
+	  <mj-column background-color="#f2f2f2">
+		<mj-spacer>
+		</mj-spacer>
+
+		<mj-spacer>
+		</mj-spacer>
+
+		<mj-text font-size="14px" line-height="30px" align="center" css-class="footer-links">
+			<a href="https://healingslice.com/privacy-policy" target="_blank">Privacy Policy</a>
+			<a href="https://healingslice.com?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}&unsubscribe-from-all=true" target="_blank">Unsubscribe from all</a>
+			<a href="https://healingslice.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}" target="_blank">Preferences</a>
+			<a href="https://healingslice.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}" target="_blank">Subscribe</a><br>
+			<br>
+			Questions or Comments? - <a href="https://healingslice.com/contact" target="_blank">Send me an email</a>
+
+		</mj-text>
+
+		<mj-text 
+			font-size="12px" 
+			font-weight="400"
+			align="center"
+			padding-top="40px" 
+			css-class="madewith-links">
+			<span>❤️ made with love with open source  (<a href="https://www.mautic.org/" target="_blank">mautic</a> / <a href="https://www.maltyst.com" target="_blank">maltyst</a>)</span>
+		</mj-text>
+
+
+
+		<!-- 
+			This is mautic built-in unsubscribe - but I don't want to use it.  
+			I'll use maltyst - which is integrated into end website and is just cleaner.
+		-->
+		<!-- <mj-text font-size="11px" align="center" color="#6d6d6d">
+		  <p>
+			<span data-fr-verified="true"><span data-fr-verified="true" class="atwho-inserted">{unsubscribe_text}</span>⁠⁠⁠⁠⁠⁠⁠</span>
+		  </p>
+		</mj-text> -->
+
+
+		<!-- This is to see a web preview  -->
+		<mj-text font-size="11px" align="center" padding-top="40px">
+		  <p>
+			<span data-fr-verified="true"><span data-fr-verified="true" class="atwho-inserted">{webview_text}</span>⁠⁠⁠⁠⁠⁠⁠</span>
+		  </p>
+		</mj-text>
+
+		<mj-spacer></mj-spacer>
+
+	  </mj-column>
+	</mj-section>
+  </mj-body>
+</mjml>
