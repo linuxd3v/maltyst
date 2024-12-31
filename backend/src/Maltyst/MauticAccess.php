@@ -9,6 +9,7 @@ use \Mautic\Api\Contacts;
 use \Mautic\Api\Segments;
 use \Mautic\Api\Emails;
 use Ramsey\Uuid\Uuid;
+use Throwable;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -231,27 +232,52 @@ class MauticAccess
 
     public function findEmailIdByName(string $emailName): array
     {
-        $emailIdsRef = [];
-
-        $apiResponse = $this->emailApi->getList($searchFilter=null, $start=0, $limit=10000, $orderBy=null, $orderByDir=null, $publishedOnly=true, $minimal=true);
+        // Attempt to get the list of emails from mautic - up to 3 times
+        $maxRetries = 3;
+        $attempt = 0;
+        $apiResponse = null;
+        while ($attempt < $maxRetries && $apiResponse === null) {
+            try {
+                // Attempt to fetch the email list
+                $apiResponse = $this->emailApi->getList(
+                    $searchFilter = null,
+                    $start = 0,
+                    $limit = 10000,
+                    $orderBy = null,
+                    $orderByDir = null,
+                    $publishedOnly = true,
+                    $minimal = true
+                );
         
-        if (!isset($apiResponse['emails'])) {
-            return [false, 'Unable to fetch list of emails from mautic'];
-        } else {
-            $emails = $apiResponse['emails'];
-            foreach($emails as $k => $emailData) {
-                $eid    = $emailData['id'];
-                $ename  = $emailData['name'];
-        
-                $emailIdsRef[$ename] = $eid;
+                // If the request is successful, break out of the loop
+                if ($apiResponse !== null) {
+                    break;
+                }
+            } catch (Throwable $e) {
+                // Log the exception (you can replace this with actual logging)
+                error_log('maltyst error: cannot access mautic api to fetch emails list: ' . $e->getMessage());
             }
+        
+            // Increment attempt counter and introduce a small delay before retrying
+            $attempt++;
         }
         
+
+        if (!isset($apiResponse['emails'])) {
+            error_log('maltyst error: Unable to fetch list of emails from mautic');
+
+            return [false, 'Unable to fetch list of emails from mautic'];
+        }
+
+
+        $emailIdsRef = array_column($apiResponse['emails'], 'id', 'name');
+
         if (!isset($emailIdsRef[$emailName])) {
             return [false, 'Email with this name is not found'];
         }
-
+        
         return [true, $emailIdsRef[$emailName]];
+        
     }
 
 
