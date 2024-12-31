@@ -14,32 +14,58 @@
             <mj-class name="preheader" color="#000000" font-size="11px"></mj-class>
         </mj-attributes>
 
-        <mj-style inline="inline">
-            a { text-decoration: none; color: inherit; }
+        <mj-style>
+            a { 
+                text-decoration: none; 
+                color: #466dda; 
+            }
+            a:hover{
+                color:#819ce7 !important;
+            }
         </mj-style>
 
         <mj-style inline="inline">
-            .link-style-blue { color: #2585b2 !important;  text-decoration: underline !important; }
+            .link-style-blue { color: #466dda !important;  text-decoration: underline !important; }
         </mj-style>
         
         <mj-style inline="inline">
-            .manage-sub-link{
+            .comment-link{
                 color:#ffffff !important;
-                border-radius:10em;
-                border:1px solid #11729e;
+                border-radius:0.31em;
                 text-decoration:none;
-                background-color:#2585b2;
+                background-color:#466dda;
                 padding:9px 15px;
                 font-size:16px;
                 line-height:1.4em;
-                font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+                font-weight:"normal";
+            }
+            .see-all-comments-link{
+                color:#ffffff !important;
+                border-radius:0.31em;
+                text-decoration:none;
+                background-color:#466dda;
+                padding:9px 15px;
+                font-size:16px;
+                line-height:1.4em;
                 font-weight:"normal";
             }
         </mj-style>
-        
+        <mj-style>
+            .comment-link:hover{
+                background-color:#819ce7 !important;
+                color: #ffffff !important;
+            }
+            .see-all-comments-link:hover{
+                background-color:#819ce7 !important;
+                color: #ffffff !important;
+            }
+        </mj-style>
+
+
+
         <mj-style inline="inline">
             a.manage-sub-unsub-sub-link {
-                color:#2585b2 !important;text-decoration:underline !important;
+                color:#466dda !important;text-decoration:underline !important;
                 font-size:14px !important;
                 margin-left:16px;
             }
@@ -49,18 +75,18 @@
 
 
     <mj-body 
-        background-color="#dddddd" 
+        background-color="#f5f5f5" 
         width="600px"
     >
 
-        <mj-section padding="0" background-color="#dddddd">
+        <mj-section padding="0" background-color="#f5f5f5">
             <mj-column width="100%">
                 <mj-spacer height="20px" />
             </mj-column>
         </mj-section>
 
 
-        <mj-section padding="8px 0 0 0" background-color="#a747b0">
+        <mj-section padding="10px 0 0 0" background-color="#a7ca9e">
             <mj-column width="100%">
             </mj-column>
         </mj-section>
@@ -87,7 +113,7 @@
                         <mj-image align="left" src="{{authorPicUrl}}" href="{{blogUrl}}" alt="" width="90px" border="none"></mj-image>
                     </mj-column>
                     <mj-column vertical-align="middle" width="81%">
-                        <mj-text align="left" font-size="26px" color="#2586b2">
+                        <mj-text align="left" font-size="26px" color="#466dda">
                             <strong><a href="{{postUrl}}">{{postTitle}}</a></strong>
                         </mj-text>
                         
@@ -103,10 +129,10 @@
                 <mj-column>
                     <mj-spacer height="10px" />
                     
-                    <mj-text align="justify" font-size="16px" color="#444444" padding="0">
+                    <mj-text align="justify" font-size="16px" color="#484848" padding="0">
                         {{&postIntro}}
                     </mj-text>
-                    <mj-text align="left" font-size="18px" font-family="Arial" padding="20px 0 20px 0"  color="#2586b2" text-decoration="underline">
+                    <mj-text align="left" font-size="18px" padding="20px 0 20px 0"  color="#466dda" text-decoration="underline">
                         <a href="{{postUrl}}">Read more of this post</a>
                     </mj-text>
                 </mj-column>
@@ -131,7 +157,16 @@
 
 
 
-
+                <mj-column width="100%">
+                    <mj-text align="center"padding-top="30px">
+                        <a class="comment-link" href="{{postReplyLink}}">
+                            Comment
+                        </a>&nbsp;&nbsp;&nbsp;
+                        <a class="see-all-comments-link" href="{{postCommentsLink}}">
+                            See all comments
+                        </a>
+                    </mj-text>
+                </mj-column>
 
                 <!--Using 100% mj-raw-->
                 
@@ -140,15 +175,11 @@
                         <tbody>
                             <tr>
                                 <td nowrap="">
-                                    <a class="manage-sub-link" style="color:#ffffff !important;border-radius:10em;border:1px solid #11729e;text-decoration:none;background-color:#2585b2;padding:9px 15px;font-size:16px;line-height:1.4em;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-weight:normal;" href="{{postReplyLink}}">
-                                        Comment
-                                    </a>
+
                                 </td>
                                 <td>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a style="margin-left:16px;color:#2585b2 !important;font-size:14px !important;text-decoration:underline !important;" class="manage-sub-unsub-sub-link" href="{{postCommentsLink}}">
-                                        See all comments
-                                    </a>
+
                                 </td>
                             </tr>
                         </tbody>
@@ -168,21 +199,21 @@
         <mj-section padding="20px 0px 20px 0px" background-color="#efefef" border-top="1px solid #ddd">
             <mj-column vertical-align="middle">
                 
-                <mj-text align="left" font-size="14px" color="#444444">
+                <mj-text align="left" font-size="14px" color="#484848">
                     <a class="link-style-blue" href="{{unsubUrl}}">Unsubscribe</a> to no longer receive posts from {{blogTitle}} | {{authorDisplayName}}.
                 </mj-text>
                 
-                <mj-text align="left" font-size="14px" color="#444444" padding-top="8px">
+                <mj-text align="left" font-size="14px" color="#484848" padding-top="8px">
                     Change your email settings at <strong><a href="{{pcUrl}}" class="link-style-blue">Preference Center</a></strong>.
                 </mj-text>
                 
                 <mj-spacer height="20px" />
 
-                <mj-text align="left" font-size="14px" color="#444444">
-                    <strong>Trouble clicking?</strong> Copy and paste this url in your browser:
+                <mj-text align="center" font-size="14px" color="#484848" padding-top="40px">
+                    <strong>Trouble reading this ?</strong> Copy and paste this url in your browser:
                 </mj-text>
                 
-                <mj-text align="left" font-size="14px" color="#444444" padding-top="8px">
+                <mj-text align="center" font-size="14px" color="#484848" padding-top="8px">
                     <a href="{{postUrl}}">{{postUrl}}</a>
                 </mj-text>
 
@@ -194,13 +225,13 @@
 
         
 
-        <mj-section padding="8px 0 0 0" background-color="#a747b0">
+        <mj-section padding="10px 0 0 0" background-color="#a7ca9e">
             <mj-column width="100%">
             </mj-column>
         </mj-section>
     
 
-        <mj-section padding="0" background-color="#dddddd">
+        <mj-section padding="0" background-color="#f5f5f5">
             <mj-column width="100%">
                 <mj-spacer height="20px" />
             </mj-column>
