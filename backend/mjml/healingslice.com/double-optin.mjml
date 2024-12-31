@@ -84,7 +84,7 @@
 
 
   <!-- BODY -->
-  <mj-body background-color="#ecf4ed">
+  <mj-body background-color="#ecf4ed" width="700px">
 	<mj-section background-color="#ffffff">
 	  <mj-column>
 		<mj-spacer height="20px">
