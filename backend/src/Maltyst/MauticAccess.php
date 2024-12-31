@@ -276,7 +276,14 @@ class MauticAccess
 
 
 
-
+    // @fixme - I think the reason I did it this way - is because there is 
+    // no way to create email as mjml in mautic via api.  
+    // https://forum.mautic.org/t/allow-email-created-via-api-to-be-mjml/22257  
+    
+    // Even if you create a segment template in mautic manually    
+    // - mautic "send to segment" api does not support passing tokens.    
+    // https://developer.mautic.org/#send-email-to-segment    
+    // Which means we must render mjml here. ☹️☹️☹️  
     public function sendPostNotificicationToSegment(array $emailData): array
     {
         //Create email

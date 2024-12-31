@@ -233,6 +233,8 @@ class PublicFetchController
 
         // Creating mautic record.
         // Note - mautic will simply return account data back to us if it's already present, no error will be thrown
+        // @fixme: wait -but if we do double optin - should we even create account at this stage? 
+        // I think we should wait for double optin to finish before we do this
         list($apiStatus1, $apiResult1) = $this->mauticAccess->createSubscriber($email, $maltystUqId);
         if (!$apiStatus1) {
             $defaultResponse['error'] = "Unable to add `$email` subscriber to newsletter";
@@ -242,28 +244,30 @@ class PublicFetchController
         $contactId = $apiResult1['contact']['id'];
 
 
-        // Here - we will support simple resending of confirmation email if user is not in mautic but is in database.
+        // Here - we will support simple resending of confirmation email if user is not 
+        // in mautic but is in the maltyst optin list.
         $exists = $this->db->doesEmailOptinExist($email);
         if ($exists) {
             $record  = $this->db->getEmailOptinRecordByEmail($email);
             $emailId = $record['id'];
         } else {
-            // Otherwise - create email record
+            // Otherwise - create maltyst email optin record
             $emailId = $this->db->createEmailOptin($email);
         }
         
         // And then create a new confirmation token
         [$emailConfirmationTokenHash, $emailConfirmationTokenPublic] = $this->publicUtils->createToken();
 
-        // Record confirmation token into the database
-        $isTokenCreated = $this->db->createEmailConfirmationToken($emailId, $emailConfirmationTokenHash, Utils::TOKEN_ALGO);
+        // Record maltyst double-optin confirmation token into the database
+        $isTokenCreated = $this->db->createEmailConfirmationToken($emailId, $emailConfirmationTokenHash, PublicUtils::TOKEN_ALGO);
         if (!$isTokenCreated) {
             $defaultResponse['error'] = 'Error generating confirmation email.';
             wp_send_json_error($defaultResponse, 500);
         }
 
 
-        //Send double-optin email
+        //Send double-optin email.
+        // It will be sent from Mautic. The template 
         $maltystOptinConfirmationUrl = $this->settingsUtils->getSettingsValue('maltystOptinConfirmationUrl');
         $tplDoubleOptin = trim($this->settingsUtils->getSettingsValue('maltystPostPublishNotifyMauticTemplateDbl'));
         $tplDoubleOptin = empty($tplDoubleOptin) || !is_string($tplDoubleOptin) ? 'double-optin' : $tplDoubleOptin;
