@@ -255,7 +255,10 @@ class ViewController
 
     
 
-
+    // Why do we maintain this on wordpress side and not in mautic? 
+    // Because mautic doesn't support: 
+    // a) sending tokens for segment email api call  
+    // b) creating mjml emails using api  
     public function notifyOfNewPost(string $new_status, string $old_status, $post): void
     {
         //Status not changing to published? - nothing to do.
