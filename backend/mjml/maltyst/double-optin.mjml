@@ -1,0 +1,188 @@
+<mjml>
+    <mj-head>
+        <mj-title>{blogTitle}</mj-title>
+
+        <!-- Import Ubuntu font from Google Fonts -->
+        <mj-font name="Ubuntu" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" />
+    
+
+	
+        <mj-attributes>
+            <mj-all padding="0px"></mj-all>
+            <mj-text font-family="system-ui, Ubuntu, sans-serif" padding="0 25px" font-size="13px"></mj-text>
+            <mj-section background-color="#ffffff"></mj-section>
+            <mj-class name="preheader" color="#000000" font-size="11px"></mj-class>
+        </mj-attributes>
+
+        <mj-style>
+            a { 
+                text-decoration: none; 
+                color: #466dda; 
+            }
+            a:hover{
+                color:#819ce7 !important;
+            }
+        </mj-style>
+
+        <mj-style inline="inline">
+            .link-style-blue { color: #466dda !important;  text-decoration: underline !important; }
+        </mj-style>
+        
+        <mj-style inline="inline">
+            .comment-link{
+                color:#ffffff !important;
+                border-radius:0.31em;
+                text-decoration:none;
+                background-color:#466dda;
+                padding:9px 15px;
+                font-size:16px;
+                line-height:1.4em;
+                font-weight:"normal";
+            }
+            .see-all-comments-link{
+                color:#ffffff !important;
+                border-radius:0.31em;
+                text-decoration:none;
+                background-color:#466dda;
+                padding:9px 15px;
+                font-size:16px;
+                line-height:1.4em;
+                font-weight:"normal";
+            }
+        </mj-style>
+        <mj-style>
+            .comment-link:hover{
+                background-color:#819ce7 !important;
+                color: #ffffff !important;
+            }
+            .see-all-comments-link:hover{
+                background-color:#819ce7 !important;
+                color: #ffffff !important;
+            }
+        </mj-style>
+
+
+
+        <mj-style inline="inline">
+            a.manage-sub-unsub-sub-link {
+                color:#466dda !important;text-decoration:underline !important;
+                font-size:14px !important;
+                margin-left:16px;
+            }
+        </mj-style>
+    </mj-head>
+
+
+
+    <mj-body 
+        background-color="#f5f5f5" 
+        width="600px"
+    >
+
+        <mj-section padding="0" background-color="#f5f5f5">
+            <mj-column width="100%">
+                <mj-spacer height="20px" />
+            </mj-column>
+        </mj-section>
+
+
+        <mj-section padding="10px 0 0 0" background-color="#a7ca9e">
+            <mj-column width="100%">
+            </mj-column>
+        </mj-section>
+
+        <mj-section padding="14px 14px 14px 24px" background-color="#efefef" border-bottom="1px solid #ddd">
+            <mj-group>
+                <mj-column vertical-align="middle" width="77%">
+                    <mj-text align="left" font-size="14px" color="#484848" padding="0">
+                        Just one more step  to subscribe to <strong><a href="{blogUrl}">{blogTitle}</a></strong>
+                    </mj-text>
+                </mj-column>
+                <mj-column vertical-align="middle" width="23%">
+                    <mj-image align="right" src="{blogLogoUrl}" href="{blogUrl}" alt="" width="50px" border="none"></mj-image>
+                </mj-column>
+            </mj-group>
+        </mj-section>
+
+
+        <mj-wrapper padding="16px" background-color="#fff">
+
+            <mj-section padding="0">
+                <mj-column background-color="#ffffff">
+                    <mj-text padding="0" font-size="17px" line-height="33px">
+                        <p style="font-style:italic;">
+                            Welcome to {blogTitle} mailing list! We are happy to see you here!     
+                        </p>
+
+                        <p>
+                We are almost there!
+                To unlock your subscription, please click the link below to verify your email address. 
+                        </p>
+
+                        <p>
+                Once verified, you'll gain full access to the content and updates!
+
+                        </p>
+
+                        <p>
+                            <a href="{optinUrl}">[Activate Now]<a>
+                        </p>
+
+                        <p>Warmly, <a href="{blogUrl}">{blogTitle}</a> editorial team.</p>
+
+                        <p padding-top="40px">
+                            We are in this together!
+                        </p>
+                    </mj-text>
+                
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+
+
+
+
+
+        <mj-section padding="20px 0px 20px 0px" background-color="#efefef" border-top="1px solid #ddd">
+            <mj-column vertical-align="middle">
+                
+                <mj-text align="left" font-size="14px" color="#484848">
+                    <a class="link-style-blue" href="{unsubUrl}">Unsubscribe</a> to no longer receive posts from {blogTitle}.
+                </mj-text>
+                
+                <mj-text align="left" font-size="14px" color="#484848" padding-top="8px">
+                    Change your email settings at <strong><a href="{pcUrl}" class="link-style-blue">Preference Center</a></strong>.
+                </mj-text>
+                
+                <mj-spacer height="20px" />
+
+                <mj-text align="center" font-size="14px" color="#484848" padding-top="40px">
+                    <strong>Trouble reading this ?</strong> Click or copy and paste this url in your browser:
+                </mj-text>
+                
+                <mj-text align="center" font-size="14px" color="#484848" padding-top="8px">
+                    {webview_text}
+                </mj-text>
+
+
+            </mj-column>
+        </mj-section>
+
+
+
+        
+
+        <mj-section padding="10px 0 0 0" background-color="#a7ca9e">
+            <mj-column width="100%">
+            </mj-column>
+        </mj-section>
+    
+
+        <mj-section padding="0" background-color="#f5f5f5">
+            <mj-column width="100%">
+                <mj-spacer height="20px" />
+            </mj-column>
+        </mj-section>
+
+    </mj-body>
+</mjml>
