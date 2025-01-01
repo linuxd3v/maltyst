@@ -2,6 +2,7 @@
 
 namespace Maltyst;
 
+use Exception;
 use \Mautic\Auth\ApiAuth;
 use \Mautic\Auth\BasicAuth;
 use \Mautic\MauticApi;
@@ -10,6 +11,7 @@ use \Mautic\Api\Segments;
 use \Mautic\Api\Emails;
 use Ramsey\Uuid\Uuid;
 use Throwable;
+use RuntimeException;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -359,21 +361,53 @@ class MauticAccess
     }
 
 
-    public function doesEmailExist(string $email): bool
+    public function getMauticContactByEmail(string $email): ?array
     {
-        $where = [ [ 'col' => 'email', 'expr' => 'eq', 'val' => $email, ] ];
-        $contacts = $this->contactsApi->getList("email:$email", 0, 30, $orderBy='email', $orderByDir='asc', $publishedOnly=false, $minimal=false);
-        $total = is_array($contacts) && isset($contacts['total']) ? (int)$contacts['total'] : null;
+        // $where = [ [ 'col' => 'email', 'expr' => 'eq', 'val' => $email, ] ];
+        // $contacts = $this->contactsApi->getList("email:$email", 0, 30, 'email', 'ASC', false, false, $where);
+
+        $maxRetries = 3;
+        $retryCount = 0;
+        $apiResponse = null;        
+        do {
+            try {
+                $apiResponse = $this->contactsApi->getList(
+                    "email:$email",
+                    0,
+                    30,
+                    'email',
+                    'ASC',
+                    false,
+                    false
+                );
+                break; // Exit the loop if successful
+            } catch (Throwable $e) {
+                $retryCount++;
+                if ($retryCount >= $maxRetries) {
+                    error_log("maltyst error: Failed to retrieve contacts after $maxRetries attempts." . $e->getMessage());
+                }
+            }
+        } while ($retryCount < $maxRetries);
+
+
+        $total = is_array($apiResponse) && isset($apiResponse['total']) ? (int)$apiResponse['total'] : null;
         
+
+        // Api call failed
         if (is_null($total)) {
-            throw new \Exception('Unrecognized mautic response received');
+            error_log("maltyst error: Unrecognized mautic response received. apiResponse = " . json_encode($apiResponse));
+            
+            // Some issue occured with mautic endpoint. 
+            // We cannot gracefully recover - so should just throw exception
+            throw new RuntimeException("maltyst error: Unrecognized mautic response received", $apiResponse);
         }
 
-        if ($contacts['total'] > 0) {
-            return true;
+        // contact record not found in mautic
+        if ($total < 1) {
+            return null;
         }
 
-        return false;
+        return array_values($apiResponse['contacts'])[0];
     }
 
     public function getEmailRecordByEmail(string $email): ?array
