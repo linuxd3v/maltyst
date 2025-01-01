@@ -268,13 +268,28 @@ class PublicFetchController
 
         //Send double-optin email.
         // It will be sent from Mautic. The template 
-        $maltystOptinConfirmationUrl = $this->settingsUtils->getSettingsValue('maltystOptinConfirmationUrl');
+        $maltystOptinConfirmationSlug = $this->settingsUtils->getSettingsValue('maltystOptinConfirmationUrl');
         $tplDoubleOptin = trim($this->settingsUtils->getSettingsValue('maltystPostPublishNotifyMauticTemplateDbl'));
         $tplDoubleOptin = empty($tplDoubleOptin) || !is_string($tplDoubleOptin) ? 'double-optin' : $tplDoubleOptin;
+        $maltystPcSlug = $this->settingsUtils->getSettingsValue('maltystPcSlug');
 
+        $optinUrl = get_bloginfo('url') . $maltystOptinConfirmationSlug . '?maltyst_optin_confirmationToken=' . $emailConfirmationTokenPublic;
+        
         $tokens = [
-            'confirmation_token' => $emailConfirmationTokenPublic,
-            'confirmation_url'   => get_site_url() . $maltystOptinConfirmationUrl . '?maltyst_optin_confirmation_token',
+            //For double optin 
+            'confirmationToken' => $emailConfirmationTokenPublic,
+            'maltystOptinConfirmationSlug' => $maltystOptinConfirmationSlug,
+            'optinUrl' => $optinUrl,
+
+
+            //Unsubscribe && preference center links
+            'unsubUrl'  => get_bloginfo('url') . $maltystPcSlug . '?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}&unsubscribe-from-all=true',
+            'pcUrl'     => get_bloginfo('url') . $maltystPcSlug . '?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}',
+
+            //Blog info
+            'blogTitle' => get_bloginfo('name'),
+            'blogDesc'  => get_bloginfo('description'),
+            'blogUrl'   => get_bloginfo('url'),
         ];
         list($apiStatus2, $apiResult2) = $this->mauticAccess->sendEmailToSubscriberByEmailName($contactId, $tplDoubleOptin, $tokens);
         if (!$apiStatus2) {
@@ -298,7 +313,7 @@ class PublicFetchController
 
         // Params
         $nonce = $_POST['security'];
-        $token = isset($_POST['maltyst_optin_confirmation_token']) ? $_POST['maltyst_optin_confirmation_token'] : '';
+        $token = isset($_POST['maltyst_optin_confirmationToken']) ? $_POST['maltyst_optin_confirmationToken'] : '';
 
         $defaultResponse = [];
     
