@@ -108,18 +108,21 @@ Preference center:
 <a href="https://example.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}">Preference Center
 </a>
 ```
+or just use: {pcUrl} token. 
 
 Unsubscribe:
 ```html
 <a href="https:/example.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}&unsubscribe-from-all=true">Unsubscribe
 </a>
 ```
-
-Double optin:
+or just use {unsubUrl} token.
+  
+    
+Double optin (curly bracketed values are passed in via api):
 ```html
-<a href="{confirmation_url}={confirmation_token}">Let's do this</a>
+<a href="https:/example.com/confirm-optin?maltyst_optin_confirmationToken={confirmation_token}">Let's do this</a>
 ```
-
+or just use {optinUrl} token.
 
 
 ## Example mautic segments:

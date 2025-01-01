@@ -63,7 +63,7 @@ class SettingsUtils
             'default' => '',
         ],
         // Preference center
-        'maltystPcUrl' => [
+        'maltystPcSlug' => [
             'type' => 'string',
             'description' => 'URL for the preference center',
             'show_in_rest' => false,

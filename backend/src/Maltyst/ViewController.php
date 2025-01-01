@@ -197,7 +197,7 @@ class ViewController
 
         // Combined info
         //==============================================================================
-        $maltystPcUrl = $this->settingsUtils->getSettingsValue('maltystPcUrl');
+        $maltystPcSlug = $this->settingsUtils->getSettingsValue('maltystPcSlug');
         $userDetails = [
             //Blog info
             'blogTitle'   => $blogTitle,
@@ -206,9 +206,9 @@ class ViewController
             'blogLogoUrl' => $this->settingsUtils->getSettingsValue('maltystBlogLogoUrl'),
 
 
-            //Unsubscribe links
-            'unsubUrl'  => $blogUrl . $maltystPcUrl . '?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}&unsubscribe-from-all=true',
-            'pcUrl'     => $blogUrl . $maltystPcUrl . '?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}',
+            //Unsubscribe && preference center links
+            'unsubUrl'  => $blogUrl . $maltystPcSlug . '?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}&unsubscribe-from-all=true',
+            'pcUrl'     => $blogUrl . $maltystPcSlug . '?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}',
 
 
             //Post info
