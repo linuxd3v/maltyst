@@ -271,6 +271,11 @@ class ViewController
             return;
         }
 
+        // Only email or post publishes
+        if ($post->post_type !== 'post') {
+            return;
+        }
+
         //Fetch all the data for email
         $data = $this->utilGetPostEmailData($post);
 
