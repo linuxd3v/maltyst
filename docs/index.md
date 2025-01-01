@@ -47,9 +47,9 @@ Why? because while mautic assigns some unique id - it is numeric and simply auto
 Which means if used in urls for unique identification - we are opening ourselves to easy contact enumeration vulnerability.  
   
 Which is why - let's add a new unique file, that will then be used for a unique consumer identification and can be used in emails etc:    
-a) Go to: "mautic" -> settings -> "Custom fields". 
-b) Click on "New"
-c) Enter something like this: 
+a. Go to: "mautic" -> settings -> "Custom fields".   
+b. Click on "New"   
+c. Enter something like this:   
 
 ```
 Label:  maltyst_contact_uqid
@@ -77,14 +77,15 @@ Note: wordpress plugin will generate a unique token for each new subscriber.
 However - if you already have subscribers in mautic - you will have to generate unique tokens for them manually.    
 it is trivial to write some script that would iterate over mautic `leads` table and generates some uuidv7 for those contacts.  
 
+
 3) Create wordpress page for preference-center && unsubscribe, for example: `/preference-center`  
-And embed this shortcode:  `[maltyst_preference_center]`
+And embed this shortcode:  `[maltyst_preference_center pc="pc-somename"]`
 
 4) Create wordpress page for double optin confirmation, ex: `/email-optin-result`
-And embed this shortcode on there:  `[maltyst_optin_confirmation]`
+And embed this shortcode on there:  `[maltyst_optin_confirmation optin="optin-somename"]`
 
 5) Add optin form shortcode to sidebar or footer or wherever you like:
-`[maltyst_optin_form]`
+`[maltyst_optin_form id="optin-somename"]`
 
 6) Create mautic segments you want to use.
     Note - preference center will only display segments explicitely marked to be displayed in preference center.
