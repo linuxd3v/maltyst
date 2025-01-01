@@ -112,7 +112,7 @@ Once verified, you'll gain full access to sourdough recipes, baking tips, exclus
 		  </p>
 
 		  <p>
-			<a href="{confirmation_url}={confirmation_token}">[Activate Now]<a>
+			<a href="{optinUrl}">[Activate Now]<a>
 		  </p>
 		  
 		  <p>
@@ -181,7 +181,7 @@ Thank you for joining our community of passionate bakers! 🍞🍞🍞
 		<mj-image src="https://healingslice.com/wp-content/uploads/2023/11/samantha-healingslice-profile-square2-768x768.jpeg" 
 		padding="0px" 
 		border-radius="200px"
-		href="https://healingslice.com/two-simple-ways-to-shape-your-sourdough-bread" 
+		href="https://healingslice.com/about" 
 		width="190px">
 		</mj-image>
 	  </mj-column>
@@ -266,9 +266,9 @@ Thank you for joining our community of passionate bakers! 🍞🍞🍞
 
 		<mj-text font-size="14px" line-height="30px" align="center" css-class="footer-links">
 			<a href="https://healingslice.com/privacy-policy" target="_blank">Privacy Policy</a>
-			<a href="https://healingslice.com?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}&unsubscribe-from-all=true" target="_blank">Unsubscribe from all</a>
-			<a href="https://healingslice.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}" target="_blank">Preferences</a>
-			<a href="https://healingslice.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}" target="_blank">Subscribe</a><br>
+			<a href="{unsubUrl}" target="_blank">Unsubscribe from all</a>
+			<a href="{pcUrl}" target="_blank">Preferences</a>
+			<!-- <a href="https://healingslice.com/preference-center?maltyst_contact_uqid={contactfield=maltyst_contact_uqid}" target="_blank">Subscribe</a><br> -->
 			<br>
 			Questions or Comments? - <a href="https://healingslice.com/contact" target="_blank">Send me an email</a>
 
