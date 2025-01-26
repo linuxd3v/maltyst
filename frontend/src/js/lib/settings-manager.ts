@@ -1,13 +1,33 @@
+import {allSettingsAreas} from './utils';
+
 export class SettingsManager {
 
-  // Method to fetch settings from the server
-  async loadSettings(optionNames: string[]): Promise<Record<string, any>> {
+
+  // loop over list and execute loadSettings(area) in parallel
+  async loadAllSettings(): Promise<void> {
     try {
-      // Encode the list of strings into a query string
-      const query = new URLSearchParams(optionNames.map((name) => ['option_names[]', name])).toString();
-      
-      // Send the GET request with the encoded query
-      const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/get-settings?${query}`, {
+      // Execute loadSettings for each area in parallel using Promise.all
+      await Promise.all(
+        allSettingsAreas.map((settingsArea) => this.loadSettings(settingsArea))
+      );
+  
+      console.log('loadAllSettings: All settings loaded successfully');
+    } catch (error) {
+      console.error('loadAllSettings: Error loading all settings:', error);
+
+      // rethrow it  - because for further handling if necessary
+      throw error;
+    }
+  }
+
+
+
+
+
+  // Method to fetch settings from the server
+  async loadSettings(area: string): Promise<Record<string, any> | null> {
+    try {
+      const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/get-settings`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -15,27 +35,37 @@ export class SettingsManager {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to fetch settings');
+        console.error('loadSettings:Failed to fetch settings:', response);
+        return null;
       }
   
-      const data = await response.json(); // Parse the response JSON
-      return data.options; // Return the `options` object from the server response
+      const data: Record<string, any> = await response.json(); // Parse the response JSON as a dictionary
+      return data;
     } catch (error) {
-      console.error('Error loading settings:', error);
-      throw error; // Rethrow the error for further handling if necessary
+      console.error('loadSettings: Error loading settings:', error);
+      // rethrow it  - because for further handling if necessary
+      throw error;
     }
   }
 
+
+
+
   // Method to save updated settings to the server
-  async saveSettings(settings: Record<string, string>): Promise<boolean> {
+  async saveSettings(areaName: string, settings: Record<string, any>): Promise<boolean> {
     try {
+      const bodyData = {
+        areaName,
+        settings,
+      };
+  
       const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/save-settings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-WP-Nonce': window.maltystData.nonce,
         },
-        body: JSON.stringify(settings), // Send the settings object directly
+        body: JSON.stringify(bodyData), // Include areaName and settings in the body
       });
   
       if (!response.ok) {
@@ -46,6 +76,8 @@ export class SettingsManager {
     } catch (error) {
       console.error('Error saving settings:', error);
       return false; // Indicate failure
+      // rethrow it  - because for further handling if necessary
+      throw error;
     }
-  } 
+  }
 }
