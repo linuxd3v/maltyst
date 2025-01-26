@@ -127,13 +127,33 @@ export class PreferenceCenters extends LitElement {
   
     const { name, segments } = event.detail;
   
-    // Update the specific preference center in the state
-    this.centers = {
-      ...this.centers,
-      [name]: { ...this.centers[name], segments },
-    };
+    if (this.centers[name]) {
+      // Update the segments for the specific center
+      this.centers = {
+        ...this.centers,
+        [name]: { ...this.centers[name], segments },
+      };
+  
+      console.log(`Segments updated for center "${name}":`, segments);
+    }
   }
   
+
+  private handleSegmentRemoved(event: CustomEvent) {
+    if (!this.centers) return;
+  
+    const { name, removedSegment, segments } = event.detail;
+  
+    if (this.centers[name]) {
+      // Update the segments for the specific center
+      this.centers = {
+        ...this.centers,
+        [name]: { ...this.centers[name], segments },
+      };
+  
+      console.log(`Segment "${removedSegment}" was removed from center "${name}".`);
+    }
+  }  
 
   render() {
     return html`
@@ -151,6 +171,7 @@ export class PreferenceCenters extends LitElement {
                   .name="${name}"
                   .segments="${data.segments}"
                   @segment-added="${this.handleSegmentAdded}"
+                  @segment-removed="${this.handleSegmentRemoved}"
                   @name-changed="${this.handleNameChanged}"
                 ></preference-center>
               `
