@@ -19,11 +19,7 @@ export class PreferenceCenters extends LitElement {
 
   // Array of objects
   @state() 
-  private centers: { name: string; segments: string[] }[] = [
-    // example:
-    // { name: 'pc-default', segments: [] },
-  ];
-
+  private centers:  Record<string, any> | null  = {}
 
 
   
@@ -43,8 +39,9 @@ export class PreferenceCenters extends LitElement {
       this.compStatus = 'loading';
 
       // Fetch settings for this component: 
-      let settings: Record<string, any> | null = await this.settingsManager.loadSettings(PreferenceCenters.MALTYST_COMP_NAME);
+      this.centers = await this.settingsManager.loadSettings(PreferenceCenters.MALTYST_COMP_NAME);
 
+      this.compStatus = 'complete';
 
     } catch (error) {
       this.compStatus = 'error';
@@ -83,17 +80,17 @@ export class PreferenceCenters extends LitElement {
     return html`
       <div class="maltyst-settings-area preference-centers">
         <h3 class="title">2. Maltyst Preference Centers:</h3>
-
+  
         <div>
           <button @click="${this.addPreferenceCenter}">Add New Preference Center</button>
         </div>
         
-        ${this.centers.map(
-          (center, index) => html`
+        ${Object.entries(this.centers).map(
+          ([name, data]) => html`
             <preference-center
-              .name="${center.name}"
-              .segments="${center.segments}"
-              @remove="${() => this.removePreferenceCenter(index)}"
+              .name="${name}"
+              .segments="${data.segments}"
+              @remove="${() => this.removePreferenceCenter(name)}"
             ></preference-center>
           `
         )}
