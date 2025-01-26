@@ -93,6 +93,8 @@ export class MauticInstance extends LitElement {
         // Inform the parent component
         this.dispatchMauticDataLoaded();
       }
+
+      this.compStatus = 'complete';
     } catch (error) {
       this.compStatus = 'error';
       console.error('Error loading settings or retrieving Mautic status:', error);
