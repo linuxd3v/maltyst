@@ -102,6 +102,39 @@ export class PreferenceCenters extends LitElement {
     }
   }
 
+  private handleNameChanged(event: CustomEvent) {
+    if (!this.centers) return;
+  
+    const { oldName, newName } = event.detail;
+  
+    if (oldName !== newName) {
+      if (this.centers[newName]) {
+        alert(`A preference center with the name "${newName}" already exists.`);
+        return;
+      }
+  
+      // Update the key in the `centers` object
+      const { [oldName]: oldData, ...remainingCenters } = this.centers;
+      this.centers = {
+        ...remainingCenters,
+        [newName]: oldData,
+      };
+    }
+  }
+
+  private handleSegmentAdded(event: CustomEvent) {
+    if (!this.centers) return;
+  
+    const { name, segments } = event.detail;
+  
+    // Update the specific preference center in the state
+    this.centers = {
+      ...this.centers,
+      [name]: { ...this.centers[name], segments },
+    };
+  }
+  
+
   render() {
     return html`
       <div class="maltyst-settings-area preference-centers">
@@ -117,7 +150,8 @@ export class PreferenceCenters extends LitElement {
                 <preference-center
                   .name="${name}"
                   .segments="${data.segments}"
-                  @remove="${() => this.removePreferenceCenter(name)}"
+                  @segment-added="${this.handleSegmentAdded}"
+                  @name-changed="${this.handleNameChanged}"
                 ></preference-center>
               `
             )
