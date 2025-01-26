@@ -15,7 +15,9 @@ export class PreferenceCenter extends LitElement {
             (segment) => html`<li>${segment}</li>`
           )}
         </ul>
-        <button @click="${this.addSegment}">Add Segment</button>
+        <div>
+          <button @click="${this.addSegment}">Add Segment</button>
+        </div>
       </div>
     `;
   }

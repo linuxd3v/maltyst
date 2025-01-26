@@ -52,27 +52,53 @@ export class PreferenceCenters extends LitElement {
 
 
   private saveSettings() {
-    // Format data as Record<string, any>
-    const data: Record<string, { segments: string[] }> = this.centers.reduce((acc, center) => {
-      acc[center.name] = { segments: center.segments };
-      return acc;
-    }, {} as Record<string, { segments: string[] }>);
-    
+    if (!this.centers) {
+      console.warn('No preference centers to save.');
+      return;
+    }
+  
+    const data: Record<string, { segments: string[] }> = Object.entries(this.centers).reduce(
+      (acc, [name, data]) => {
+        acc[name] = { segments: data.segments || [] };
+        return acc;
+      },
+      {} as Record<string, { segments: string[] }>
+    );
+  
     this.settingsManager.saveSettings(PreferenceCenters.MALTYST_COMP_NAME, data);
   }
-
+  
 
   private addPreferenceCenter() {
     const name = prompt('Enter preference center name:');
     if (name) {
-      this.centers = [...this.centers, { name, segments: [] }];
+      if (!this.centers) {
+        this.centers = {};
+      }
+  
+      if (this.centers[name]) {
+        alert(`A preference center with the name "${name}" already exists.`);
+        return;
+      }
+  
+      this.centers = {
+        ...this.centers,
+        [name]: { segments: [] },
+      };
     }
   }
+  
 
-  private removePreferenceCenter(index: number) {
-    const confirmRemoval = confirm(`Are you sure you want to remove the preference center "${this.centers[index].name}"?`);
+  private removePreferenceCenter(name: string) {
+    if (!this.centers || !this.centers[name]) {
+      console.warn(`Preference center "${name}" does not exist.`);
+      return;
+    }
+
+    const confirmRemoval = confirm(`Are you sure you want to remove the preference center "${name}"?`);
     if (confirmRemoval) {
-      this.centers = this.centers.filter((_, i) => i !== index);
+      const { [name]: _, ...remainingCenters } = this.centers;
+      this.centers = remainingCenters;
     }
   }
 
@@ -80,24 +106,26 @@ export class PreferenceCenters extends LitElement {
     return html`
       <div class="maltyst-settings-area preference-centers">
         <h3 class="title">2. Maltyst Preference Centers:</h3>
-  
+    
         <div>
           <button @click="${this.addPreferenceCenter}">Add New Preference Center</button>
         </div>
         
-        ${Object.entries(this.centers).map(
-          ([name, data]) => html`
-            <preference-center
-              .name="${name}"
-              .segments="${data.segments}"
-              @remove="${() => this.removePreferenceCenter(name)}"
-            ></preference-center>
-          `
-        )}
+        ${this.centers
+          ? Object.entries(this.centers).map(
+              ([name, data]) => html`
+                <preference-center
+                  .name="${name}"
+                  .segments="${data.segments}"
+                  @remove="${() => this.removePreferenceCenter(name)}"
+                ></preference-center>
+              `
+            )
+          : html`<p>No preference centers available.</p>`}
         <button @click="${this.saveSettings}">Save</button>
       </div>
     `;
-  }
+  }  
 }
 
 
