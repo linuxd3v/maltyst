@@ -177,7 +177,9 @@ export class PreferenceCenters extends LitElement {
               `
             )
           : html`<p>No preference centers available.</p>`}
-        <button @click="${this.saveSettings}">Save</button>
+        <div>
+          <button @click="${this.saveSettings}">Save</button>
+        </div>
       </div>
     `;
   }  
