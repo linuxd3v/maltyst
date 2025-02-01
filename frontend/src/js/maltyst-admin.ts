@@ -2,7 +2,7 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import {SettingsManager} from "./lib/settings-manager";
+import {FetchManager} from "./lib/fetch-manager";
 import {MauticInstanceChecker} from "./lib/mautic-instance-checker";
 
 

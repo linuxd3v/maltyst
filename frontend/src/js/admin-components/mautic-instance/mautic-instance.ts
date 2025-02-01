@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import {SettingsManager} from '../../lib/settings-manager';
+import {FetchManager} from '../../lib/fetch-manager';
 import { state } from 'lit/decorators.js';
 import { handleInput } from '../../lib/utils';
 
@@ -19,7 +19,7 @@ export class MauticInstance extends LitElement {
   @state()
   private compStatus: string = '';
 
-  private settingsManager: SettingsManager;
+  private fetchManager: FetchManager;
 
   // Actual component settings:  
   @property({ type: String })
@@ -41,7 +41,7 @@ export class MauticInstance extends LitElement {
   //===========================================================================
   constructor() {
     super();
-    this.settingsManager = new SettingsManager();
+    this.fetchManager = new FetchManager();
   }
 
 
@@ -82,7 +82,7 @@ export class MauticInstance extends LitElement {
       this.compStatus = 'loading';
 
       // Fetch settings for this component: 
-      let settings: Record<string, any> | null = await this.settingsManager.loadSettings(MauticInstance.MALTYST_COMP_NAME);
+      let settings: Record<string, any> | null = await this.fetchManager.loadSettings(MauticInstance.MALTYST_COMP_NAME);
 
 
       if (settings) {
@@ -113,7 +113,7 @@ export class MauticInstance extends LitElement {
       'maltystMauticBasicPassword': this.maltystMauticBasicPassword,
     };
     
-    this.settingsManager.saveSettings(MauticInstance.MALTYST_COMP_NAME, toSave);
+    this.fetchManager.saveSettings(MauticInstance.MALTYST_COMP_NAME, toSave);
   }
 
 
@@ -146,7 +146,7 @@ export class MauticInstance extends LitElement {
     return html`
       <div class="maltyst-form-error">
         <p>Something went wrong. Please try again.</p>
-        <button @click=${() => this.settingsManager.loadSettings(MauticInstance.MALTYST_COMP_NAME)}>Retry</button>
+        <button @click=${() => this.fetchManager.loadSettings(MauticInstance.MALTYST_COMP_NAME)}>Retry</button>
       </div>
     `;
   }

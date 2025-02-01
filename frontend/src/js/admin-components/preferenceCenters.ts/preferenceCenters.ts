@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
-import {SettingsManager} from '../../lib/settings-manager';
+import {FetchManager} from '../../lib/fetch-manager';
 
 @customElement('preference-centers')
 export class PreferenceCenters extends LitElement {
@@ -12,7 +12,7 @@ export class PreferenceCenters extends LitElement {
   @property({ type: Boolean }) 
   maltystMauticIsApiValid: boolean = false;
 
-  private settingsManager: SettingsManager;
+  private fetchManager: FetchManager;
 
   @state()
   private compStatus: string = '';
@@ -21,13 +21,15 @@ export class PreferenceCenters extends LitElement {
   @state() 
   private centers:  Record<string, any> | null  = {}
 
-
+  // Array of objects
+  @state() 
+  private validSegments:  Record<string, any> | null  = {}
   
   // Constructor && methods
   //===========================================================================
   constructor() {
     super();
-    this.settingsManager = new SettingsManager();
+    this.fetchManager = new FetchManager();
   }
 
 
@@ -39,7 +41,10 @@ export class PreferenceCenters extends LitElement {
       this.compStatus = 'loading';
 
       // Fetch settings for this component: 
-      this.centers = await this.settingsManager.loadSettings(PreferenceCenters.MALTYST_COMP_NAME);
+      this.centers = await this.fetchManager.loadSettings(PreferenceCenters.MALTYST_COMP_NAME);
+
+      // Fetch settings for this component: 
+      this.validSegments = await this.fetchManager.getAllSegments();
 
       this.compStatus = 'complete';
 
@@ -65,7 +70,7 @@ export class PreferenceCenters extends LitElement {
       {} as Record<string, { segments: string[] }>
     );
   
-    this.settingsManager.saveSettings(PreferenceCenters.MALTYST_COMP_NAME, data);
+    this.fetchManager.saveSettings(PreferenceCenters.MALTYST_COMP_NAME, data);
   }
   
 
