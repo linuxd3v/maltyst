@@ -25,6 +25,7 @@ export class PreferenceCenters extends LitElement {
   @state() 
   private validSegments:  Record<string, any> | null  = {}
   
+  
   // Constructor && methods
   //===========================================================================
   constructor() {
@@ -175,6 +176,7 @@ export class PreferenceCenters extends LitElement {
                 <preference-center
                   .name="${name}"
                   .segments="${data.segments}"
+                  .validSegments="${this.validSegments}"
                   @segment-added="${this.handleSegmentAdded}"
                   @segment-removed="${this.handleSegmentRemoved}"
                   @name-changed="${this.handleNameChanged}"

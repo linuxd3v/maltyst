@@ -8,6 +8,7 @@ export class PreferenceCenter extends LitElement {
   @property({ type: String }) name = ''; // Name of the preference center
   @property({ type: Array }) segments: string[] = []; // Array of segment IDs
 
+  @property({ type: Object }) validSegments: Record<string, any> | null = null; // Valid segments
 
 
 
@@ -67,7 +68,6 @@ export class PreferenceCenter extends LitElement {
   render() {
     return html`
       <div class="preference-center">
-        <!-- Preference center name/id -->
         <h3>
           <input
             type="text"
@@ -79,12 +79,15 @@ export class PreferenceCenter extends LitElement {
 
         <ul>
           ${this.segments.map(
-            (segment, index) => html`
-              <li>
-                ${segment}
-                <button @click="${() => this.removeSegment(index)}">Remove</button>
-              </li>
-            `
+            (segment, index) => {
+              const isValid = this.validSegments && segment in this.validSegments;
+              return html`
+                <li class="${isValid ? '' : 'unknownsegment'}">
+                  ${segment}
+                  <button @click="${() => this.removeSegment(index)}">Remove</button>
+                </li>
+              `;
+            }
           )}
         </ul>
 
