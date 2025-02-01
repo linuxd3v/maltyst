@@ -57,7 +57,7 @@ class MauticAccess
             // Initiate Mautic Basic auth
             $initAuth = new ApiAuth();
             $this->basicAuth = $initAuth->newAuth($mauticBasic, 'BasicAuth');
-            $this->basicAuth->setCurlTimeout(5);
+            // $this->basicAuth->setCurlTimeout(5);
             
             // Diferent mautic apis
             $this->mauticApi   = new MauticApi();
@@ -67,6 +67,33 @@ class MauticAccess
         } else {
             new AdminMessage('Unable to access mautic api. You need to fill in the mautic instance address, and access details.');
         }
+    }
+
+
+    public function getAllSegments(): array
+    {
+
+        $segmentsExported = [];
+
+        $apiResponse = $this->segmentApi->getList(
+                $searchFilter = null, $start=0, $limit=0, $orderBy=null, $orderByDir=null, $publishedOnly=true, $minimal=null);
+
+
+        // Handle API errors
+        if (isset($apiResponse['errors'])) {
+            $errorMessage = isset($apiResponse['errors'][0]['message']) ? $apiResponse['errors'][0]['message'] : 'Unknown error';
+            error_log('Mautic API error: ' . json_encode($apiResponse['errors']));
+            throw new \RuntimeException("API error: $errorMessage");
+        }
+
+        // Process segments
+        $apiSegments = $apiResponse['lists'] ?? [];
+        foreach ($apiSegments as $apiSegmentData) {
+            $segmentAlias = sanitize_text_field($apiSegmentData['alias']);
+            $segmentsExported[$segmentAlias] = array_map('sanitize_text_field', $apiSegmentData);
+        }
+
+        return $segmentsExported;
     }
 
     //Let's pull all segments from api and filter to only leave

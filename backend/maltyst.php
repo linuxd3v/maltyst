@@ -123,6 +123,15 @@ final class Plugin
         // Registering admin fetch handlers
         // ============================================================================    
         add_action('rest_api_init', function () {
+            register_rest_route(MALTYST_ROUTE, '/get-segments', [
+                'methods' => 'GET',
+                'callback' => [$this->adminFetchController, 'getSegments'],
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
+            ]);
+        });
+        add_action('rest_api_init', function () {
             register_rest_route(MALTYST_ROUTE, '/save-settings', [
                 'methods' => 'POST',
                 'callback' => [$this->adminFetchController, 'saveSettings'],
