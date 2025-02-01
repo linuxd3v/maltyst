@@ -36,6 +36,22 @@ class AdminFetchController
     }
 
     //===========================================================================
+    // Getting segments
+    //===========================================================================
+    public function getSegments(WP_REST_Request $request): WP_REST_Response|WP_Error
+    {    
+        $segments = $this->mauticAccess->getAllSegments();
+
+        // Return the options as a response
+        return rest_ensure_response([
+            'message'  => 'Segments retrieved successfully',
+            'segments' => $segments,
+        ]);
+    }
+
+
+    
+    //===========================================================================
     // Getting a setting
     //===========================================================================
     public function getSettings(WP_REST_Request $request): WP_REST_Response|WP_Error
