@@ -16,8 +16,11 @@ export class PreferenceCenter extends LitElement {
 
   private handleNameChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    const newName = input.value;
-
+    let newName = input.value
+      .toLowerCase() // Convert to lowercase
+      .replace(/\s+/g, '-') // Replace spaces with dashes
+      .replace(/[^a-z0-9_-]/g, ''); // Remove invalid characters
+  
     this.dispatchEvent(
       new CustomEvent('name-changed', {
         detail: { oldName: this.name, newName },
@@ -25,9 +28,12 @@ export class PreferenceCenter extends LitElement {
         composed: true,
       })
     );
-
+  
     this.name = newName;
-  }
+  
+    // Update input value to reflect the sanitized version
+    input.value = newName;
+  }  
 
   private addSegment() {
     const newSegment = prompt('Enter new segment ID:');
@@ -61,6 +67,7 @@ export class PreferenceCenter extends LitElement {
   render() {
     return html`
       <div class="preference-center">
+        <!-- Preference center name/id -->
         <h3>
           <input
             type="text"
@@ -69,6 +76,7 @@ export class PreferenceCenter extends LitElement {
             placeholder="Enter preference center name"
           />
         </h3>
+
         <ul>
           ${this.segments.map(
             (segment, index) => html`
@@ -79,6 +87,7 @@ export class PreferenceCenter extends LitElement {
             `
           )}
         </ul>
+
         <div>
           <button @click="${this.addSegment}">Add Segment</button>
         </div>
