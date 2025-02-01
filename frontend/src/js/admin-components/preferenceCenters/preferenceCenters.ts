@@ -15,7 +15,7 @@ export class PreferenceCenters extends LitElement {
   private fetchManager: FetchManager;
 
   @state()
-  private compStatus: string = '';
+  private compStatus: 'loading' | 'complete' | 'error' = 'loading';
 
   // Array of objects
   @state() 
@@ -163,7 +163,7 @@ export class PreferenceCenters extends LitElement {
 
   render() {
     return html`
-      <div class="maltyst-settings-area preference-centers">
+      <div class="maltyst-settings-area preference-centers ${this.compStatus}">
         <h3 class="title">2. Maltyst Preference Centers:</h3>
     
         <div>
