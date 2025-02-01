@@ -1,6 +1,6 @@
 import {allSettingsAreas} from './utils';
 
-export class SettingsManager {
+export class FetchManager {
 
 
   // loop over list and execute loadSettings(area) in parallel
@@ -22,7 +22,32 @@ export class SettingsManager {
 
 
 
+    
 
+
+  // Method to fetch settings from the server
+  async getAllSegments(): Promise<Record<string, any> | null> {
+    try {
+      const response = await fetch(`${window.maltystData.MALTYST_ROUTE}/get-segments`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.error('getAllSegments:Failed to fetch segments:', response);
+        return null;
+      }
+
+      const data: Record<string, any> = await response.json(); // Parse the response JSON as a dictionary
+      return data;
+    } catch (error) {
+      console.error('loadSettings: Error loading segments:', error);
+      // rethrow it  - because for further handling if necessary
+      throw error;
+    }
+  }
 
   // Method to fetch settings from the server
   async loadSettings(area: string): Promise<Record<string, any> | null> {
