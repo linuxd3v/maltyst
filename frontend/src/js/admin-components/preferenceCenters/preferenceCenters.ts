@@ -173,17 +173,21 @@ export class PreferenceCenters extends LitElement {
         ${this.centers
           ? Object.entries(this.centers).map(
               ([name, data]) => html`
-                <preference-center
-                  .name="${name}"
-                  .segments="${data.segments}"
-                  .validSegments="${this.validSegments}"
-                  @segment-added="${this.handleSegmentAdded}"
-                  @segment-removed="${this.handleSegmentRemoved}"
-                  @name-changed="${this.handleNameChanged}"
-                ></preference-center>
+                <div class="preference-center-container">
+                  <preference-center
+                    .name="${name}"
+                    .segments="${data.segments}"
+                    .validSegments="${this.validSegments}"
+                    @segment-added="${this.handleSegmentAdded}"
+                    @segment-removed="${this.handleSegmentRemoved}"
+                    @name-changed="${this.handleNameChanged}"
+                  ></preference-center>
+                  <button @click="${() => this.removePreferenceCenter(name)}">Remove</button>
+                </div>
               `
             )
           : html`<p>No preference centers available.</p>`}
+  
         <div>
           <button @click="${this.saveSettings}">Save</button>
         </div>

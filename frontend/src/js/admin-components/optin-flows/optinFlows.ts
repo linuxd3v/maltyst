@@ -173,23 +173,28 @@ export class OptinFlows extends LitElement {
         ${this.optins
           ? Object.entries(this.optins).map(
               ([name, data]) => html`
-                <optin-flow
-                  .name="${name}"
-                  .segments="${data.segments}"
-                  .validSegments="${this.validSegments}"
-                  @segment-added="${this.handleSegmentAdded}"
-                  @segment-removed="${this.handleSegmentRemoved}"
-                  @name-changed="${this.handleNameChanged}"
-                ></optin-flow>
+                <div class="optin-flow-container">
+                  <optin-flow
+                    .name="${name}"
+                    .segments="${data.segments}"
+                    .validSegments="${this.validSegments}"
+                    @segment-added="${this.handleSegmentAdded}"
+                    @segment-removed="${this.handleSegmentRemoved}"
+                    @name-changed="${this.handleNameChanged}"
+                  ></optin-flow>
+                  <button @click="${() => this.removeOptin(name)}">Remove</button>
+                </div>
               `
             )
           : html`<p>No optin flows available.</p>`}
+  
         <div>
           <button @click="${this.saveSettings}">Save</button>
         </div>
       </div>
     `;
-  }  
+  }
+  
 }
 
 
